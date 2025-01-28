@@ -1,0 +1,2 @@
+describe Week do
+end

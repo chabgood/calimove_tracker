@@ -10,9 +10,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_31_014113) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_28_034134) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "days", force: :cascade do |t|
+    t.string "name"
+    t.string "level"
+    t.string "week_number"
+    t.bigint "week_id", null: false
+    t.string "workout"
+    t.string "workout_name"
+    t.string "intensity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["week_id"], name: "index_days_on_week_id"
+  end
+
+  create_table "levels", force: :cascade do |t|
+    t.string "number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["number"], name: "index_levels_on_number", unique: true
+  end
+
+  create_table "phases", force: :cascade do |t|
+    t.string "number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["number"], name: "index_phases_on_number", unique: true
+  end
+
+  create_table "schedules", force: :cascade do |t|
+    t.string "title", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["title"], name: "index_schedules_on_title", unique: true
+  end
 
   create_table "sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -31,5 +65,30 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_31_014113) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  create_table "week_names", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_week_names_on_name", unique: true
+  end
+
+  create_table "week_numbers", force: :cascade do |t|
+    t.string "number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["number"], name: "index_week_numbers_on_number", unique: true
+  end
+
+  create_table "weeks", force: :cascade do |t|
+    t.bigint "schedule_id"
+    t.integer "number"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["schedule_id"], name: "index_weeks_on_schedule_id"
+  end
+
+  add_foreign_key "days", "weeks"
   add_foreign_key "sessions", "users"
+  add_foreign_key "weeks", "schedules"
 end

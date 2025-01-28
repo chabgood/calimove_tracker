@@ -17,7 +17,11 @@ require "action_cable/engine"
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
-
+if defined?(RubyVM::YJIT) && RubyVM::YJIT.respond_to?(:enable)
+  RubyVM::YJIT.enable
+else
+  puts "YJIT is not enabled"
+end
 module CalimoveTracker
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -35,7 +39,7 @@ module CalimoveTracker
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-
+    # config.test_framework :rspec
     # Don't generate system test files.
     config.generators.system_tests = nil
   end
