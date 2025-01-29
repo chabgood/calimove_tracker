@@ -1,2 +1,0 @@
-class WeekName < ApplicationRecord
-end

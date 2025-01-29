@@ -82,7 +82,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_28_034134) do
   create_table "weeks", force: :cascade do |t|
     t.bigint "schedule_id"
     t.integer "number"
-    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["schedule_id"], name: "index_weeks_on_schedule_id"

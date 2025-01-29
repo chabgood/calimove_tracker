@@ -4,6 +4,6 @@ class SchedulesController < ApplicationController
   end
 
   def create
-    schedule = Schedule.new.import(params[:schedule][:file])
+    schedule = Schedule.import(params[:schedule][:file])
   end
 end
