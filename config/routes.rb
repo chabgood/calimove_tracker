@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
-  resources :schedules, only: [ :new, :create, :show ]
+  resources :schedules, only: [ :new, :create, :show, :index ]
+  resources :weeks, only: [ :show ]
   get "home/index"
 
   # get "password", to: "passwords#edit", as: :edit_password

@@ -162,6 +162,7 @@ ALTER SEQUENCE public.phases_id_seq OWNED BY public.phases.id;
 
 CREATE TABLE public.schedules (
     id bigint NOT NULL,
+    users_id bigint,
     title character varying NOT NULL,
     user_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
@@ -547,6 +548,13 @@ CREATE INDEX index_schedules_on_user_id ON public.schedules USING btree (user_id
 
 
 --
+-- Name: index_schedules_on_users_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_schedules_on_users_id ON public.schedules USING btree (users_id);
+
+
+--
 -- Name: index_sessions_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -604,6 +612,14 @@ ALTER TABLE ONLY public.days
 
 ALTER TABLE ONLY public.schedules
     ADD CONSTRAINT fk_rails_3c900465fa FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: schedules fk_rails_74e36e0c49; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schedules
+    ADD CONSTRAINT fk_rails_74e36e0c49 FOREIGN KEY (users_id) REFERENCES public.users(id);
 
 
 --

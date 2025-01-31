@@ -2,11 +2,12 @@ class Schedule < ApplicationRecord
   validates :title, presence: true, allow_nil: false
 
   has_many :weeks
+  belongs_to :user
 
-  def self.import(file)
+  def self.import(current_user, file)
     xlsx = Roo::Excelx.new(file.path)
 
-    new_schedule = self.create(title: xlsx.sheet(0).row(1)[0])
+    new_schedule = current_user.schedules.create(title: xlsx.sheet(0).row(1)[0])
     week_num = 0
     xlsx.each_row_streaming(offest: 1) do |row|
       # binding.pry if new_week?(row)
@@ -20,6 +21,7 @@ class Schedule < ApplicationRecord
     new_schedule
   end
 
+  private
   def self.new_week?(row)
     row.map(&:cell_value).include?("Set 1")
   end

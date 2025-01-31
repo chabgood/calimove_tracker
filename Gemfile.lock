@@ -398,9 +398,9 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  bcrypt (~> 3.1.7)
+  bcrypt
   bootsnap
-  bootstrap (~> 5.3.3)
+  bootstrap
   brakeman
   csv
   dartsass-rails
@@ -411,7 +411,7 @@ DEPENDENCIES
   propshaft
   pry
   pry-rails
-  puma (>= 5.0)
+  puma
   rails (~> 8.0.1)
   roo
   rspec-rails
