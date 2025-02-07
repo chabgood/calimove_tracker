@@ -64,12 +64,7 @@ ALTER SEQUENCE public.day_names_id_seq OWNED BY public.day_names.id;
 CREATE TABLE public.days (
     id bigint NOT NULL,
     day_name_id bigint,
-    level_id bigint,
-    phase_id bigint,
     week_id bigint NOT NULL,
-    workout character varying,
-    workout_name_id bigint,
-    intensity character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -92,6 +87,43 @@ CREATE SEQUENCE public.days_id_seq
 --
 
 ALTER SEQUENCE public.days_id_seq OWNED BY public.days.id;
+
+
+--
+-- Name: exercises; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.exercises (
+    id bigint NOT NULL,
+    day_id bigint,
+    level_id bigint,
+    phase_id bigint,
+    number character varying,
+    workout character varying,
+    workout_name_id bigint,
+    intensity character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: exercises_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.exercises_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: exercises_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.exercises_id_seq OWNED BY public.exercises.id;
 
 
 --
@@ -162,7 +194,6 @@ ALTER SEQUENCE public.phases_id_seq OWNED BY public.phases.id;
 
 CREATE TABLE public.schedules (
     id bigint NOT NULL,
-    users_id bigint,
     title character varying NOT NULL,
     user_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
@@ -341,6 +372,13 @@ ALTER TABLE ONLY public.days ALTER COLUMN id SET DEFAULT nextval('public.days_id
 
 
 --
+-- Name: exercises id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercises ALTER COLUMN id SET DEFAULT nextval('public.exercises_id_seq'::regclass);
+
+
+--
 -- Name: levels id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -411,6 +449,14 @@ ALTER TABLE ONLY public.day_names
 
 ALTER TABLE ONLY public.days
     ADD CONSTRAINT days_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: exercises exercises_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercises
+    ADD CONSTRAINT exercises_pkey PRIMARY KEY (id);
 
 
 --
@@ -492,20 +538,6 @@ CREATE INDEX index_days_on_day_name_id ON public.days USING btree (day_name_id);
 
 
 --
--- Name: index_days_on_level_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_days_on_level_id ON public.days USING btree (level_id);
-
-
---
--- Name: index_days_on_phase_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_days_on_phase_id ON public.days USING btree (phase_id);
-
-
---
 -- Name: index_days_on_week_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -513,10 +545,31 @@ CREATE INDEX index_days_on_week_id ON public.days USING btree (week_id);
 
 
 --
--- Name: index_days_on_workout_name_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_exercises_on_day_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_days_on_workout_name_id ON public.days USING btree (workout_name_id);
+CREATE INDEX index_exercises_on_day_id ON public.exercises USING btree (day_id);
+
+
+--
+-- Name: index_exercises_on_level_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exercises_on_level_id ON public.exercises USING btree (level_id);
+
+
+--
+-- Name: index_exercises_on_phase_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exercises_on_phase_id ON public.exercises USING btree (phase_id);
+
+
+--
+-- Name: index_exercises_on_workout_name_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exercises_on_workout_name_id ON public.exercises USING btree (workout_name_id);
 
 
 --
@@ -548,13 +601,6 @@ CREATE INDEX index_schedules_on_user_id ON public.schedules USING btree (user_id
 
 
 --
--- Name: index_schedules_on_users_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_schedules_on_users_id ON public.schedules USING btree (users_id);
-
-
---
 -- Name: index_sessions_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -583,19 +629,11 @@ CREATE UNIQUE INDEX index_workout_names_on_name ON public.workout_names USING bt
 
 
 --
--- Name: days fk_rails_0ac5f4e6e2; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: exercises fk_rails_24a581eead; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.days
-    ADD CONSTRAINT fk_rails_0ac5f4e6e2 FOREIGN KEY (workout_name_id) REFERENCES public.workout_names(id);
-
-
---
--- Name: days fk_rails_1cdb200d8a; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.days
-    ADD CONSTRAINT fk_rails_1cdb200d8a FOREIGN KEY (level_id) REFERENCES public.levels(id);
+ALTER TABLE ONLY public.exercises
+    ADD CONSTRAINT fk_rails_24a581eead FOREIGN KEY (day_id) REFERENCES public.days(id);
 
 
 --
@@ -615,14 +653,6 @@ ALTER TABLE ONLY public.schedules
 
 
 --
--- Name: schedules fk_rails_74e36e0c49; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.schedules
-    ADD CONSTRAINT fk_rails_74e36e0c49 FOREIGN KEY (users_id) REFERENCES public.users(id);
-
-
---
 -- Name: sessions fk_rails_758836b4f0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -631,11 +661,11 @@ ALTER TABLE ONLY public.sessions
 
 
 --
--- Name: days fk_rails_8bae030719; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: exercises fk_rails_8a066a682b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.days
-    ADD CONSTRAINT fk_rails_8bae030719 FOREIGN KEY (phase_id) REFERENCES public.phases(id);
+ALTER TABLE ONLY public.exercises
+    ADD CONSTRAINT fk_rails_8a066a682b FOREIGN KEY (phase_id) REFERENCES public.phases(id);
 
 
 --
@@ -647,11 +677,27 @@ ALTER TABLE ONLY public.days
 
 
 --
+-- Name: exercises fk_rails_c0aa1d7324; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercises
+    ADD CONSTRAINT fk_rails_c0aa1d7324 FOREIGN KEY (workout_name_id) REFERENCES public.workout_names(id);
+
+
+--
 -- Name: weeks fk_rails_d845741310; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.weeks
     ADD CONSTRAINT fk_rails_d845741310 FOREIGN KEY (schedule_id) REFERENCES public.schedules(id);
+
+
+--
+-- Name: exercises fk_rails_ea83fab3fd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercises
+    ADD CONSTRAINT fk_rails_ea83fab3fd FOREIGN KEY (level_id) REFERENCES public.levels(id);
 
 
 --
@@ -661,6 +707,7 @@ ALTER TABLE ONLY public.weeks
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250131232753'),
 ('20250125052608'),
 ('20250105005300'),
 ('20250103014910'),

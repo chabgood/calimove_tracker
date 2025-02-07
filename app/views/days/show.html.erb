@@ -1,0 +1,18 @@
+<b><h2><%= @day.day_name.name.titleize %></h2></b>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Intensity</th>
+    </tr>
+  </thead>
+  <tbody>
+<% @day.exercises.each do |exercise| %>
+  <tr>
+    <td><%= exercise.workout_name.name.titleize %></td>
+    <td><%= exercise.intensity %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>

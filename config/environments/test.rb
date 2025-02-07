@@ -14,7 +14,10 @@ Rails.application.configure do
   # recommended that you enable it in continuous integration systems to ensure eager
   # loading is working properly before deploying your code.
   config.eager_load = ENV["CI"].present?
-
+  config.after_initialize do
+    Prosopite.rails_logger = true
+    Prosopite.raise = true
+  end
   # Configure public file server for tests with cache-control for performance.
   config.public_file_server.headers = { "cache-control" => "public, max-age=3600" }
 

@@ -26,13 +26,7 @@ class CreateDays < ActiveRecord::Migration[8.0]
 
     create_table :days do |t|
       t.references :day_name, foreign_key: :true
-      t.references :level, foreign_key: :true
-      t.references :phase, foreign_key: :true
       t.references :week, null: false, foreign_key: true
-      t.string :workout
-      t.references :workout_name, foreign_key: :true
-      t.string :intensity
-
       t.timestamps
     end
     add_index :day_names, :name, unique: true
