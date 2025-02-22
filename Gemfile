@@ -21,8 +21,8 @@ gem "bootstrap"
 gem "csv"
 gem "roo"
 gem "roo-xls"
-
-gem 'prosopite'
+#gem 'rubypython'
+#gem 'prosopite'
 gem 'pg_query'
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt"
