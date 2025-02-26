@@ -8,6 +8,9 @@ describe Schedule, type: :model do
   it { should have_many(:weeks) }
 
   describe '.import' do
+    # it 'calls the pythone excel_parser' do
+    #   expect(Kernel).to receive(:python)
+    # end
     let(:file) { fixture_file_upload("test_upload.xlsx") }
     subject { Schedule.import(user, file) }
     it 'imports the cali move file' do

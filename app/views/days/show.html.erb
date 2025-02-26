@@ -5,6 +5,8 @@
     <tr>
       <th scope="col">Name</th>
       <th scope="col">Intensity</th>
+      <th scope="col">Rest</th>
+      <th>scope="col">Set(s)</th>
     </tr>
   </thead>
   <tbody>
@@ -12,6 +14,8 @@
   <tr>
     <td><%= exercise.workout_name.name.titleize %></td>
     <td><%= exercise.intensity %></td>
+    <td><%= exercise.rest %></td>
+    <td><%= exercise.sets %></td>
   </tr>
 <% end %>
 </tbody>

@@ -8,6 +8,6 @@ class SchedulesController < ApplicationController
 
   def create
     @schedule = Schedule.import(current_user, params[:schedule][:file])
-    redirect_to :index
+    redirect_to index_path
   end
 end

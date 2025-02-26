@@ -25,9 +25,9 @@ Rails.application.configure do
     config.action_controller.perform_caching = false
   end
 
-  config.after_initialize do
-    Prosopite.rails_logger = true
-  end
+  # config.after_initialize do
+  #   Prosopite.rails_logger = true
+  # end
 
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store

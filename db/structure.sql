@@ -103,7 +103,8 @@ CREATE TABLE public.exercises (
     workout_name_id bigint,
     intensity character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    sets integer DEFAULT 0
 );
 
 
@@ -707,6 +708,7 @@ ALTER TABLE ONLY public.exercises
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250223002839'),
 ('20250131232753'),
 ('20250125052608'),
 ('20250105005300'),
