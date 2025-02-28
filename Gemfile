@@ -21,12 +21,13 @@ gem "bootstrap"
 gem "csv"
 gem "roo"
 gem "roo-xls"
-#gem 'rubypython'
-#gem 'prosopite'
-gem 'pg_query'
+gem "jquery-rails"
+# gem 'rubypython'
+# gem 'prosopite'
+gem "pg_query"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt"
-
+gem "best_in_place"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
