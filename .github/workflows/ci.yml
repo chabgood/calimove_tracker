@@ -72,10 +72,13 @@ jobs:
 
       - name: Setup DB, Run tests
         env:
-          PGHOST: postgres
-          PGUSER: postgres
-          PGPORT: ${{ job.services.postgres.ports[5432] }}
+          PG_DATABASE: postgres
+          PG_HOST: localhost
+          PG_PORT: 5432
+          PG_USER: postgres
+          PG_PASSWORD: postgres
           RAILS_ENV: test
         run: |
-          bin/rails db:create db:schema:load
+          sudo apt-get -yqq install libpq-dev
+          bundle exec rails db:migrate
           bundle exec rspec

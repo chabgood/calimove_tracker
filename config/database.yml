@@ -56,9 +56,11 @@ development:
 test:
   <<: *default
   database: calimove_tracker_test
-  host: <%= ENV['DATABASE_URL'] || 'localhost' %>
-  username: postgres
-  password: postgres
+  database: <%= ENV.fetch('PG_DATABASE', 'postgres') %>
+  host:     <%= ENV.fetch('PG_HOST',  'localhost') %>
+  username: <%= ENV.fetch('PG_USER', nil) %>
+  password: <%= ENV.fetch('PG_PASSWORD', nil) %>
+  port:     <%= ENV.fetch('PG_PORT', 5432) %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
