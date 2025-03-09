@@ -1,0 +1,5 @@
+<% @weeks.each do |week| %>
+   <div>
+    Week: <%= link_to week.number, week_path(week) %>
+  </div>
+  <% end %>

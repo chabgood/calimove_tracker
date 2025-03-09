@@ -1,0 +1,2 @@
+class WeekNumber < ApplicationRecord
+end
