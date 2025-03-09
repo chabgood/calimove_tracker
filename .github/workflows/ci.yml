@@ -1,90 +1,54 @@
-name: CI
+name: Ruby
 
 on:
-  pull_request:
-    branches: [main]
   push:
-    branches: [main]
+    branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs:
-  scan_ruby:
+  build:
     runs-on: ubuntu-latest
 
     services:
       postgres:
-        image: postgres:17
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ''
-          POSTGRES_HOST_AUTH_METHOD: trust
+        image: postgres:12.1-alpine
         ports:
           - 5432:5432
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install PostgreSQL client
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Ruby 2.7
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.7.x
+      - name: Setup cache key and directory for gems cache
+        uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gem-use-ruby-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Get Yarn cache directory path
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Setup cache key and directory for node_modules cache
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      - name: Bundle install
         run: |
-          sudo apt-get -yqq install libpq-dev
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Lint code for consistent style
-        run: bin/rubocop -f github
-
-  test:
-    runs-on: ubuntu-latest
-
-    # services:
-    #  redis:
-    #    image: redis
-    #    ports:
-    #      - 6379:6379
-    #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
-    steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git node-gyp pkg-config python-is-python3 google-chrome-stable
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Setup DB, Run tests
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+      - name: Yarn install
+        run: yarn --frozen-lockfile
+      - name: Test with RSpec
         env:
-          PG_DATABASE: postgres
-          PG_HOST: localhost
-          PG_PORT: 5432
-          PG_USER: postgres
-          PG_PASSWORD: postgres
-          RAILS_ENV: test
+          RAILS_ENV: 'test'
+          DATABASE_URL: 'postgres://postgres@localhost:5432/calimove_tracker_test'
+          RUBYOPT: '-W:no-deprecated -W:no-experimental' # Suppress Rails 6 deprecation warnings for ruby 2.7
         run: |
-          cp config/database.yml.github-actions config/database.yml
-          sudo apt-get -yqq install libpq-dev
-          bundle exec rails db:migrate
+          bundle exec rails db:setup
           bundle exec rspec
