@@ -13,6 +13,8 @@ jobs:
     services:
       postgres:
         image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
         # needed because the postgres container does not provide a healthcheck
@@ -48,7 +50,6 @@ jobs:
         env:
           RAILS_ENV: 'test'
           DATABASE_URL: 'postgres://postgres@localhost:5432/calimove_tracker_test'
-          POSTGRES_HOST_AUTH_METHOD: trust
           RUBYOPT: '-W:no-deprecated -W:no-experimental' # Suppress Rails 6 deprecation warnings for ruby 2.7
         run: |
           bundle exec rails db:setup
