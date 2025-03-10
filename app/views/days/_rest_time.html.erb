@@ -1,4 +1,5 @@
 <%= form_with model: exercise, url: update_rest_time_path(id: exercise, format: :turbo_stream), id: dom_id(exercise) do |exercise| %>
+  <%= exercise.checkbox :copy_rest_time %>
   <%= exercise.text_field :rest %>
   <%= exercise.submit 'Update', class: 'btn btn-primary' %>
 <% end %>

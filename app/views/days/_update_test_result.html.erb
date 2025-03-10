@@ -1,0 +1,4 @@
+<%= form_with model: exercise, url: update_test_result_path(id: exercise, format: :turbo_stream), id: dom_id(exercise) do |exercise| %>
+  <%= exercise.text_field :test_result, id: "tes_result_#{exercise.id}" %>
+  <%= exercise.submit 'Update', class: 'btn btn-primary' %>
+<% end %>

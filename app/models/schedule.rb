@@ -14,7 +14,7 @@ class Schedule < ApplicationRecord
       if is_a_workout_day?(row)
         day = @new_week.days.includes(:day_name).find_or_create_by(day_name_id: find_day_id(row))
         exercise = day.exercises.build(phase_id: find_phase_id(row), level_id: find_level_id(row),
-        workout: row[5].value, workout_name_id: find_workout_name_id(row), intensity: row[8].value)
+          workout: row[5].value, workout_name_id: find_workout_name_id(row), number: row[7], intensity: row[8].value)
         if row[5].value.starts_with?("T")
           exercise.rest_between_exercises = "10-15 minutes"
         end

@@ -1,8 +1,0 @@
-test:
-  adapter: postgresql
-  host: localhost
-  encoding: unicode
-  database: calimove_tracker_test
-  pool: 20
-  username: <%= ENV["POSTGRES_USER"] %>
-  password: <%= ENV["POSTGRES_PASSWORD"] %>
