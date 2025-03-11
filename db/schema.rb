@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_01_191724) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_11_000542) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -46,6 +46,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_01_191724) do
     t.string "test_result", limit: 10
     t.string "workout_value", limit: 10
     t.text "notes"
+    t.decimal "percentage", precision: 3, scale: 2
     t.index ["day_id"], name: "index_exercises_on_day_id"
     t.index ["level_id"], name: "index_exercises_on_level_id"
     t.index ["phase_id"], name: "index_exercises_on_phase_id"

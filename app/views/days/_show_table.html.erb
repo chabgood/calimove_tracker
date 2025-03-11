@@ -10,6 +10,7 @@
       <% else %>
       <th>Workout reps/time</th>
       <% end %>
+      <th scope="col">Percentage</th>
       <th scope="col">Set(s)</th>
       <th>Notes</th>
     </tr>
@@ -31,10 +32,18 @@
         <%= turbo_frame_tag exercise do %>
           <%= render partial: 'update_test_result', locals: { exercise: exercise } %>
         <% end %>
-    </td>
+      </td>
       <% else %>
       <td><%= exercise.workout_value %></td>
+    <% end %>
+    <% unless @day.week.number == 1 %>
+      <td>
+      <%= form_with model: exercise, url: update_percentage_path(id: exercise, format: :turbo_stream), id: dom_id(exercise) do |exercise| %>
+        <%= exercise.select :percentage, options_for_select([[50, ".5"],[60, ".6"],[70, ".7"],[80, ".8"],[90, ".9"],[100, "1"]]) %>
+        <%= exercise.submit 'Update', class: 'btn btn-primary' %>
       <% end %>
+      </td>
+    <% end %>
     <td><%= exercise.sets %></td>
     <td>
       <%= form_with model: exercise, url: update_notes_path(id: exercise, format: :turbo_stream), id: dom_id(exercise, :notes) do |exercise| %>

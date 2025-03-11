@@ -17,5 +17,6 @@ Rails.application.routes.draw do
   patch "update_rest_time", to: "exercises#update_rest_time"
   patch "update_test_result", to: "exercises#update_test_result"
   patch "update_notes", to: "exercises#update_notes"
+  patch "update_percentage", to: "exercises#update_percentage"
   root "schedules#index"
 end
