@@ -11,6 +11,7 @@
       <th>Workout reps/time</th>
       <% end %>
       <th scope="col">Set(s)</th>
+      <th>Notes</th>
     </tr>
   </thead>
   <tbody>
@@ -35,6 +36,12 @@
       <td><%= exercise.workout_value %></td>
       <% end %>
     <td><%= exercise.sets %></td>
+    <td>
+      <%= form_with model: exercise, url: update_notes_path(id: exercise, format: :turbo_stream), id: dom_id(exercise, :notes) do |exercise| %>
+        <%= exercise.text_area :notes, id: "tes_result_#{exercise.id}" %>
+        <%= exercise.submit 'Update', class: 'btn btn-primary' %>
+      <% end %>
+    </td>
   </tr>
   <% if exercise.rest_between_exercises.present? %>
     <tr>

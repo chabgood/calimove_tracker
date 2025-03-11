@@ -16,5 +16,6 @@ Rails.application.routes.draw do
   delete "logout", to: "sessions#destroy"
   patch "update_rest_time", to: "exercises#update_rest_time"
   patch "update_test_result", to: "exercises#update_test_result"
+  patch "update_notes", to: "exercises#update_notes"
   root "schedules#index"
 end
