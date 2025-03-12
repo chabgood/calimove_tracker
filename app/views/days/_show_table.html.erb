@@ -10,7 +10,9 @@
       <% else %>
       <th>Workout reps/time</th>
       <% end %>
-      <th scope="col">Percentage</th>
+      <% unless @day.week.number == 1 %>
+        <th scope="col">Percentage</th>
+      <% end%>
       <th scope="col">Set(s)</th>
       <th>Notes</th>
     </tr>
@@ -30,7 +32,7 @@
     <% if @day.week.number == 1 %>
       <td>
         <%= turbo_frame_tag exercise do %>
-          <%= render partial: 'update_test_result', locals: { exercise: exercise } %>
+          <%= render partial: 'days/update_test_result', locals: { exercise: exercise } %>
         <% end %>
       </td>
       <% else %>
@@ -38,17 +40,18 @@
     <% end %>
     <% unless @day.week.number == 1 %>
       <td>
-      <%= form_with model: exercise, url: update_percentage_path(id: exercise, format: :turbo_stream), id: dom_id(exercise) do |exercise| %>
-        <%= exercise.select :percentage, options_for_select([[50, ".5"],[60, ".6"],[70, ".7"],[80, ".8"],[90, ".9"],[100, "1"]]) %>
-        <%= exercise.submit 'Update', class: 'btn btn-primary' %>
+      <%= form_with model: exercise, url: update_percentage_path(id: exercise, format: :turbo_stream), id: dom_id(exercise) do |exercise_form| %>
+        <%#= binding.pry %>
+        <%= exercise_form.select :percentage, options_for_select([[50, "0.5"],[60, "0.6"],[70, "0.7"],[80, "0.8"],[90, "0.9"],[100, "1.0"]], exercise_form.object.percentage) %>
+        <%= exercise_form.submit 'Update', class: 'btn btn-primary' %>
       <% end %>
       </td>
     <% end %>
     <td><%= exercise.sets %></td>
     <td>
-      <%= form_with model: exercise, url: update_notes_path(id: exercise, format: :turbo_stream), id: dom_id(exercise, :notes) do |exercise| %>
-        <%= exercise.text_area :notes, id: "tes_result_#{exercise.id}" %>
-        <%= exercise.submit 'Update', class: 'btn btn-primary' %>
+      <%= form_with model: exercise, url: update_notes_path(id: exercise, format: :turbo_stream), id: dom_id(exercise, :notes) do |exercise_form| %>
+        <%= exercise_form.text_area :notes, id: "test_result_#{exercise.id}" %>
+        <%= exercise_form.submit 'Update', class: 'btn btn-primary' %>
       <% end %>
     </td>
   </tr>
@@ -68,6 +71,6 @@
 </table>
 <div class="flex justify-right" id="load_more_button">
   <% if next_day = find_next_day(@day) %>
-    <%= link_to find_next_day(@day)&.name, day_path(id: next_day&.id) %>
+    <%= link_to next_day&.day_name&.name, day_path(id: next_day&.id) %>
     <% end %>
 </div>
