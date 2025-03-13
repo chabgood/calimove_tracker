@@ -1,7 +1,7 @@
 class Schedule < ApplicationRecord
   validates :title, presence: true, allow_nil: false
 
-  has_many :weeks
+  has_many :weeks, strict_loading: true
   belongs_to :user
 
   def self.import(current_user, file)

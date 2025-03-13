@@ -55,7 +55,7 @@
       <% end %>
     </td>
   </tr>
-  <% if exercise.rest_between_exercises.present? %>
+  <% if exercise.rest_between_exercises.present? && @day.exercises.last != exercise%>
     <tr>
       <td></td>
       <td></td>
@@ -69,8 +69,11 @@
 <% end %>
 </tbody>
 </table>
-<div class="flex justify-right" id="load_more_button">
+<div class="float-right" id="load_more_button">
   <% if next_day = find_next_day(@day) %>
-    <%= link_to next_day&.day_name&.name, day_path(id: next_day&.id) %>
-    <% end %>
+    <%= button_to next_day&.day_name&.name, day_path(id: next_day&.id) %>
+  <% else %>
+    <%= binding.pry %>
+    <%= button_to 'Next Week', week_path(id: @day.week&.id + 1), method: :get %>
+  <% end %>
 </div>

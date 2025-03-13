@@ -4,6 +4,6 @@ class WeeksController < ApplicationController
   end
 
   def index
-    @weeks = Schedule.find(params[:schedule_id]).weeks
+    @weeks = Schedule.includes(:weeks).find(params[:schedule_id]).weeks
   end
 end
