@@ -18,7 +18,7 @@
     </tr>
   </thead>
   <tbody>
-<% @day.exercises.each do |exercise| %>
+<% @day.exercises.order(:number).each do |exercise| %>
   <tr>
     <td><%= exercise.workout_name.name.titleize %></td>
     <td><%= exercise.intensity %></td>
@@ -40,8 +40,7 @@
     <% end %>
     <% unless @day.week.number == 1 %>
       <td>
-      <%= form_with model: exercise, url: update_percentage_path(id: exercise, format: :turbo_stream), id: dom_id(exercise) do |exercise_form| %>
-        <%#= binding.pry %>
+      <%= form_with model: exercise, id: dom_id(exercise) do |exercise_form| %>
         <%= exercise_form.select :percentage, options_for_select([[50, "0.5"],[60, "0.6"],[70, "0.7"],[80, "0.8"],[90, "0.9"],[100, "1.0"]], exercise_form.object.percentage) %>
         <%= exercise_form.submit 'Update', class: 'btn btn-primary' %>
       <% end %>
@@ -49,13 +48,13 @@
     <% end %>
     <td><%= exercise.sets %></td>
     <td>
-      <%= form_with model: exercise, url: update_notes_path(id: exercise, format: :turbo_stream), id: dom_id(exercise, :notes) do |exercise_form| %>
+      <%= form_with model: exercise, id: dom_id(exercise, :notes) do |exercise_form| %>
         <%= exercise_form.text_area :notes, id: "test_result_#{exercise.id}" %>
         <%= exercise_form.submit 'Update', class: 'btn btn-primary' %>
       <% end %>
     </td>
   </tr>
-  <% if exercise.rest_between_exercises.present? && @day.exercises.last != exercise%>
+  <% if exercise.rest_between_exercises.present? && @day.exercises.order(:number).last != exercise%>
     <tr>
       <td></td>
       <td></td>
@@ -71,9 +70,8 @@
 </table>
 <div class="float-right" id="load_more_button">
   <% if next_day = find_next_day(@day) %>
-    <%= button_to next_day&.day_name&.name, day_path(id: next_day&.id) %>
+    <%= button_to next_day&.day_name&.name, day_path(id: next_day&.id), method: :get %>
   <% else %>
-    <%= binding.pry %>
     <%= button_to 'Next Week', week_path(id: @day.week&.id + 1), method: :get %>
   <% end %>
 </div>

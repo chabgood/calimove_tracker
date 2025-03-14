@@ -5,6 +5,7 @@ class Exercise < ApplicationRecord
   belongs_to :level
 
   belongs_to :phase
+
   default_scope { order(:number) }
 
   attr_accessor :copy_rest_time
