@@ -2,9 +2,11 @@ class Exercise < ApplicationRecord
   belongs_to :day
   belongs_to :workout_name
 
-  belongs_to :level
+  belongs_to :exercise_status, foreign_key: "exercise_statuses_id"
 
-  belongs_to :phase
+  belongs_to :level, optional: true
+
+  belongs_to :phase, optional: true
 
   default_scope { order(:number) }
 

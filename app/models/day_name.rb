@@ -1,3 +1,3 @@
 class DayName < ApplicationRecord
-  has_one :day
+  has_many :day
 end

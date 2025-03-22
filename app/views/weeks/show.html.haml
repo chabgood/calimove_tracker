@@ -1,0 +1,8 @@
+%table.table
+  %thead
+    %tr
+      %th{:scope => "col"} Name
+%tbody
+  - @week.days.each do |day|
+    %tr
+      %td= link_to "#{day.day_name.name} - #{@week.week_status.name}", day_path(day)

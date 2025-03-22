@@ -1,3 +1,3 @@
 class Level < ApplicationRecord
-  has_one :exercise
+  has_many :exercise
 end

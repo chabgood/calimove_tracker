@@ -1,6 +1,6 @@
 class WeeksController < ApplicationController
   def show
-    @week = Week.includes(:days).find_by(id: params[:id])
+    @week = Week.includes(:week_status, days: [ :day_name ]).find_by(id: params[:id])
   end
 
   def index

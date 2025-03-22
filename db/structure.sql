@@ -27,6 +27,15 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: data_migrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_migrations (
+    version character varying NOT NULL
+);
+
+
+--
 -- Name: day_names; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -90,6 +99,37 @@ ALTER SEQUENCE public.days_id_seq OWNED BY public.days.id;
 
 
 --
+-- Name: exercise_statuses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.exercise_statuses (
+    id bigint NOT NULL,
+    name character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: exercise_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.exercise_statuses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: exercise_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.exercise_statuses_id_seq OWNED BY public.exercise_statuses.id;
+
+
+--
 -- Name: exercises; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -98,6 +138,7 @@ CREATE TABLE public.exercises (
     day_id bigint,
     level_id bigint,
     phase_id bigint,
+    exercise_statuses_id bigint,
     number character varying,
     workout character varying,
     workout_name_id bigint,
@@ -105,11 +146,12 @@ CREATE TABLE public.exercises (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     sets integer DEFAULT 0,
-    rest character varying(50),
+    rest_between_sets character varying(50),
     rest_between_exercises character varying(50),
     test_result character varying(10),
     workout_value character varying(10),
-    notes text
+    notes text,
+    percentage numeric(1,1)
 );
 
 
@@ -201,7 +243,7 @@ ALTER SEQUENCE public.phases_id_seq OWNED BY public.phases.id;
 CREATE TABLE public.schedules (
     id bigint NOT NULL,
     title character varying NOT NULL,
-    user_id bigint,
+    user_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -301,12 +343,44 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: week_statuses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.week_statuses (
+    id bigint NOT NULL,
+    name character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: week_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.week_statuses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: week_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.week_statuses_id_seq OWNED BY public.week_statuses.id;
+
+
+--
 -- Name: weeks; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.weeks (
     id bigint NOT NULL,
     schedule_id bigint,
+    week_statuses_id bigint,
     number integer DEFAULT 0,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -378,6 +452,13 @@ ALTER TABLE ONLY public.days ALTER COLUMN id SET DEFAULT nextval('public.days_id
 
 
 --
+-- Name: exercise_statuses id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercise_statuses ALTER COLUMN id SET DEFAULT nextval('public.exercise_statuses_id_seq'::regclass);
+
+
+--
 -- Name: exercises id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -420,6 +501,13 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
+-- Name: week_statuses id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.week_statuses ALTER COLUMN id SET DEFAULT nextval('public.week_statuses_id_seq'::regclass);
+
+
+--
 -- Name: weeks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -442,6 +530,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: data_migrations data_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_migrations
+    ADD CONSTRAINT data_migrations_pkey PRIMARY KEY (version);
+
+
+--
 -- Name: day_names day_names_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -455,6 +551,14 @@ ALTER TABLE ONLY public.day_names
 
 ALTER TABLE ONLY public.days
     ADD CONSTRAINT days_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: exercise_statuses exercise_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercise_statuses
+    ADD CONSTRAINT exercise_statuses_pkey PRIMARY KEY (id);
 
 
 --
@@ -514,6 +618,14 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: week_statuses week_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.week_statuses
+    ADD CONSTRAINT week_statuses_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: weeks weeks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -555,6 +667,13 @@ CREATE INDEX index_days_on_week_id ON public.days USING btree (week_id);
 --
 
 CREATE INDEX index_exercises_on_day_id ON public.exercises USING btree (day_id);
+
+
+--
+-- Name: index_exercises_on_exercise_statuses_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exercises_on_exercise_statuses_id ON public.exercises USING btree (exercise_statuses_id);
 
 
 --
@@ -628,10 +747,25 @@ CREATE INDEX index_weeks_on_schedule_id ON public.weeks USING btree (schedule_id
 
 
 --
+-- Name: index_weeks_on_week_statuses_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_weeks_on_week_statuses_id ON public.weeks USING btree (week_statuses_id);
+
+
+--
 -- Name: index_workout_names_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_workout_names_on_name ON public.workout_names USING btree (name);
+
+
+--
+-- Name: exercises fk_rails_08c387acdd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercises
+    ADD CONSTRAINT fk_rails_08c387acdd FOREIGN KEY (exercise_statuses_id) REFERENCES public.exercise_statuses(id);
 
 
 --
@@ -699,6 +833,14 @@ ALTER TABLE ONLY public.weeks
 
 
 --
+-- Name: weeks fk_rails_e84e6d10f7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.weeks
+    ADD CONSTRAINT fk_rails_e84e6d10f7 FOREIGN KEY (week_statuses_id) REFERENCES public.week_statuses(id);
+
+
+--
 -- Name: exercises fk_rails_ea83fab3fd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -713,6 +855,8 @@ ALTER TABLE ONLY public.exercises
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250320215710'),
+('20250311000542'),
 ('20250301191724'),
 ('20250225231246'),
 ('20250223002839'),

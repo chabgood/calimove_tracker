@@ -1,0 +1,7 @@
+%h1 Upload a New Schedule
+= form_with(model: @schedule, multipart: true, url: create_schedule_upload_path,  local: true) do |form|
+  .field
+    = form.label :file
+    = form.file_field :file
+  .actions
+    = form.submit 'Upload'

@@ -1,0 +1,9 @@
+%p{:style => "color: green"}= notice
+- content_for :title, "Schedules"
+%h1 Schedules
+#schedules
+  - @schedules.each do |schedule|
+    = render schedule
+    %p
+      = link_to "Show this schedule", schedule
+= link_to "New schedule", new_schedule_path

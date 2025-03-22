@@ -1,0 +1,22 @@
+%nav.navbar.navbar-expand-lg.navbar-light.bg-light
+  .container-fluid
+    = link_to "Calimove Tracker", root_path, class: "navbar-brand"
+    %button.navbar-toggler{"aria-controls" => "navbarNav", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-bs-target" => "#navbarNav", "data-bs-toggle" => "collapse", :type => "button"}
+      %span.navbar-toggler-icon
+    #navbarNav.collapse.navbar-collapse
+      %ul.navbar-nav
+        %li.nav-item
+          = link_to  "Upload a New schedule", new_schedule_upload_path, class: "nav-link"
+        %li.nav-item
+          = link_to  "Create a New schedule", new_schedule_path, class: "nav-link"
+      %ul.navbar-nav.ms-auto.mb-2.mb-lg-0
+        - if Current.user
+          %li.nav-item
+            = link_to Current.user.email_address, nil, diabled: true,  class: "nav-link"
+          %li.nav-item
+            = button_to "Logout", logout_path, method: :delete, class: "btn btn-outline-secondary"
+        - else
+          %li.nav-item
+            = link_to "Sign Up", sign_up_path, class: "nav-link"
+          %li.nav-item
+            = link_to "Login", sign_in_path, class: "nav-link"

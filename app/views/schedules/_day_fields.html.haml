@@ -1,0 +1,7 @@
+.nested-fields
+  = f.association :day_name, collection: DayName.pluck(:name, :id), prompt: 'Choose an Day'
+  %h3 exercise:
+  = f.simple_fields_for :exercises do |exercise|
+    = render 'exercise_fields', f: exercise
+  .links
+    = link_to_add_association 'Add an Exercise', f, :exercises

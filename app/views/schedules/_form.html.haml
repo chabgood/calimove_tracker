@@ -1,0 +1,12 @@
+= simple_form_for(@schedule) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+  .form-inputs
+    = f.input :title, placeholder: 'The title of your Schedule'
+    %h3 Week
+    .daily_stuff
+      #weeks
+      = f.simple_fields_for :weeks do |week|
+        = render 'week_fields', f: week
+  .form-actions
+    = f.button :submit

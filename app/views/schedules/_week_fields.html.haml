@@ -1,0 +1,8 @@
+.nested-fields
+  = f.input :number
+  = f.association :week_status, collection: WeekStatus.pluck(:name, :id), prompt: 'Choose an Status'
+  %h3 Days
+  = f.simple_fields_for :days do |day|
+    = render 'day_fields', f: day
+    = link_to_add_association 'Add an Day', f, :days
+  = link_to_remove_association "remove week", f

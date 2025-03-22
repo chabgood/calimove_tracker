@@ -1,0 +1,11 @@
+- @day ||= local_assigns[:day]
+= button_to 'Schedule', schedule_path(@day.week.schedule), method: :get
+%b
+  %h2
+    = @day.day_name.name.titleize
+    - if @day.week.number == 1
+      \- Test Week
+= button_to 'This Week', week_path(@day.week), method: :get
+#notification
+#show_table
+  != render partial: 'show_table'

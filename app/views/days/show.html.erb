@@ -1,7 +1,0 @@
-<% @day ||= local_assigns[:day] %>
-<b><h2><%= @day.day_name.name.titleize %> <% if @day.week.number == 1 %> - Test Week<% end%> </h2></b>
-
-<div id='notification'> </div>
-<div id="show_table">
-  <%== render partial: 'show_table' %>
-</div>
