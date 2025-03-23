@@ -10,6 +10,8 @@
     %script{:crossorigin => "anonymous", :integrity => "sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=", :src => "https://code.jquery.com/jquery-3.7.1.min.js"}
       :cdata
     = javascript_include_tag :cocoon
+    %script{src: "https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"}
+
     = csrf_meta_tags
     = csp_meta_tag
     = yield :head

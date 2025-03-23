@@ -19,10 +19,13 @@
     "autoprefixer": "^10.4.20",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "choices.js": "^11.1.0",
+    "chosen-jquery": "^0.1.1",
     "nodemon": "^3.1.9",
     "postcss": "^8.5.3",
     "postcss-cli": "^11.0.0",
-    "sass": "^1.85.1"
+    "sass": "^1.85.1",
+    "select2": "^4.1.0-rc.0"
   },
   "browserslist": [
     "defaults"
