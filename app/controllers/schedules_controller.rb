@@ -1,5 +1,5 @@
 class SchedulesController < ApplicationController
-  before_action :set_schedule, only: %i[ show edit update]
+  before_action :set_schedule, only: %i[ show edit update destroy]
   def index
     @schedules = current_user.schedules.includes(:weeks)
   end
@@ -48,6 +48,12 @@ class SchedulesController < ApplicationController
   def create_upload
     @schedule = Schedule.import(current_user, params[:schedule][:file])
     redirect_to root_path
+  end
+
+  def destroy
+    if @schedule.destroy
+      redirect_to schedules_path
+    end
   end
 
   private

@@ -4,9 +4,10 @@
   .form-inputs
     = f.input :title, placeholder: 'The title of your Schedule'
     %h3 Week
-    .daily_stuff
-      #weeks
+    #weeks
       = f.simple_fields_for :weeks do |week|
-        = render 'week_fields', f: week
+        .daily-stuff
+          = render 'week_fields', f: week
+          = link_to_add_association 'Add an Week', f, :weeks
   .form-actions
     = f.button :submit
