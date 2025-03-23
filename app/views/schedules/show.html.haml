@@ -6,4 +6,7 @@
   \#{link_to "Back to schedules", schedules_path}
 
   \#{button_to "Destroy this schedule", @schedule, method: :delete}
-  = link_to 'Weeks', weeks_path(schedule_id: @schedule.id)
+  Weeks:
+  - @schedule.weeks.each do |week|
+    %div
+      = link_to("Week: #{week.number}", week_path(week))
