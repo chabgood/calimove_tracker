@@ -1,3 +1,9 @@
+GIT
+  remote: git@github.com:jnbt/countdown.git
+  revision: 4bed1754438637c48546e50f93fe3afe73d4faf0
+  specs:
+    countdown (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -228,19 +234,19 @@ GEM
       net-protocol
     net-ssh (7.3.0)
     nio4r (2.7.4)
-    nokogiri (1.18.5-aarch64-linux-gnu)
+    nokogiri (1.18.6-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.5-aarch64-linux-musl)
+    nokogiri (1.18.6-aarch64-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.18.5-arm-linux-gnu)
+    nokogiri (1.18.6-arm-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.5-arm-linux-musl)
+    nokogiri (1.18.6-arm-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.18.5-x86_64-darwin)
+    nokogiri (1.18.6-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.5-x86_64-linux-gnu)
+    nokogiri (1.18.6-x86_64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.5-x86_64-linux-musl)
+    nokogiri (1.18.6-x86_64-linux-musl)
       racc (~> 1.4)
     ostruct (0.6.1)
     pagy (9.3.4)
@@ -477,6 +483,7 @@ DEPENDENCIES
   brakeman
   capybara
   cocoon
+  countdown!
   cssbundling-rails
   csv
   data_migrate

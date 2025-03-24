@@ -67,7 +67,7 @@ class SchedulesController < ApplicationController
       :title,
       weeks_attributes: [ :id, :number, :week_statuses_id, :_destroy,
       days_attributes: [ :_destroy, :id, :day_name_id,
-      exercises_attributes: [ :id, :workout_name_id, :exercise_statuses_id, :intensity, :sets, :rest_between_sets, :rest_between_exercises ] ] ]
+      exercises_attributes: [ :id, :workout_name_id, :number, :exercise_statuses_id, :intensity, :sets, :rest_between_sets, :rest_between_exercises ] ] ]
     )
   end
 end

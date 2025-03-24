@@ -4,8 +4,8 @@ class ExercisesController < ApplicationController
   def update
     respond_to do |format|
       format.turbo_stream do
-        if @exercise.update(permitted_params)
-          @exercise.update(workout_value: calculate_percentage) if params[:exercise][:percentage].present?
+        if @exercise.update!(permitted_params)
+          @exercise.update!(workout_value: calculate_percentage) if params[:exercise][:percentage].present?
           update_rest_time if params[:exercise][:copy_rest_time].present?
           format.turbo_stream
         else

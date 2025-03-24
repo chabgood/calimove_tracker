@@ -41,7 +41,6 @@
     <% unless @day.week.number == 1 %>
       <td>
       <%= form_with model: exercise, url: update_percentage_path(id: exercise, format: :turbo_stream), id: dom_id(exercise) do |exercise_form| %>
-        <%#= binding.pry %>
         <%= exercise_form.select :percentage, options_for_select([[50, "0.5"],[60, "0.6"],[70, "0.7"],[80, "0.8"],[90, "0.9"],[100, "1.0"]], exercise_form.object.percentage) %>
         <%= exercise_form.submit 'Update', class: 'btn btn-primary' %>
       <% end %>
@@ -70,7 +69,10 @@
 </tbody>
 </table>
 <div class="flex justify-right" id="load_more_button">
+  <% if previous_day = find_previous_day(@day) %>
+    <%= link_to previous_day&.day_name&.name, day_path(id: previous_day&.id) %>
+  <% end %>
   <% if next_day = find_next_day(@day) %>
     <%= link_to next_day&.day_name&.name, day_path(id: next_day&.id) %>
-    <% end %>
+  <% end %>
 </div>
