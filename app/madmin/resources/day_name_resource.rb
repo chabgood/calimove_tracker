@@ -12,9 +12,9 @@ class DayNameResource < Madmin::Resource
   # scope :published
 
   # Add actions to the resource's show page
-  # member_action do |record|
-  #   link_to "Do Something", some_path
-  # end
+  member_action do |record|
+    link_to "Destroy", day_names_path
+  end
 
   # Customize the display name of records in the admin area.
   # def self.display_name(record) = record.name

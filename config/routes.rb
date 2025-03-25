@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :weeks, only: [ :show, :index ]
   resources :days, only: [ :show, :index ]
   resources :exercises, only: [ :update ]
+  resources :day_names
 
   post "create_schedule_upload", to: "schedules#create_upload"
   get "new_schedule_upload", to: "schedules#new_upload"

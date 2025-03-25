@@ -1,9 +1,3 @@
-GIT
-  remote: git@github.com:jnbt/countdown.git
-  revision: 4bed1754438637c48546e50f93fe3afe73d4faf0
-  specs:
-    countdown (0.0.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -483,7 +477,6 @@ DEPENDENCIES
   brakeman
   capybara
   cocoon
-  countdown!
   cssbundling-rails
   csv
   data_migrate
