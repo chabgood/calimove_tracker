@@ -40,6 +40,7 @@ gem "solid_cable"
 
 gem "pg_query"
 gem "twitter-bootstrap-rails"
+gem "hairtrigger"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt"
 # Reduces boot times through caching; required in config/boot.rb

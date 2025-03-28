@@ -2,6 +2,7 @@
    = f.association :workout_name, collection: WorkoutName.order(:name).pluck(:name, :id), prompt: 'Choose an Exercise'
    = f.input :intensity, label: 'Reps/Time'
    = f.input :number, label: 'Exercsise order'
+   = f.input :percentage, collection: (10..100).step(10).map{ |n| ["#{n}%", n] }, html: { class: 'choices-select'}, prompt: 'Choose an Status'
    = f.input :sets
    = f.association :exercise_status, collection: ExerciseStatus.order(:name).pluck(:name, :id), html: { class: 'choices-select'}, prompt: 'Choose an Status'
    = f.input :rest_between_sets

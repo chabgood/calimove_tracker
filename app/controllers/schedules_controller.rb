@@ -59,7 +59,7 @@ class SchedulesController < ApplicationController
   private
 
   def set_schedule
-    @schedule = Schedule.includes(:weeks).find_by(id: params[:id])
+    @schedule = Schedule.includes(weeks: [ days: [ :exercises ] ]).find_by(id: params[:id])
   end
 
   def schedule_params
@@ -67,7 +67,7 @@ class SchedulesController < ApplicationController
       :title,
       weeks_attributes: [ :id, :number, :week_statuses_id, :_destroy,
       days_attributes: [ :_destroy, :id, :day_name_id,
-      exercises_attributes: [ :_destroy, :id, :workout_name_id, :number, :exercise_statuses_id, :intensity, :sets, :rest_between_sets, :rest_between_exercises ] ] ]
+      exercises_attributes: [ :_destroy, :id, :workout_name_id, :percentage, :number, :exercise_statuses_id, :intensity, :sets, :rest_between_sets, :rest_between_exercises ] ] ]
     )
   end
 end

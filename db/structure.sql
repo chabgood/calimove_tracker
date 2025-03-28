@@ -10,6 +10,24 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: exercises_before_update_row_tr(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.exercises_before_update_row_tr() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    NEW.workout_value = (SELECT (e1.test_result::FLOAT * NEW.percentage)/100 FROM exercises e1
+          join exercise_statuses es on es.id = e1.exercise_statuses_id
+          WHERE e1.workout_name_id = NEW.workout_name_id
+          and es.name <> 'test'
+          ORDER BY e1.id ASC LIMIT 1);
+    RETURN NEW;
+END;
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -148,10 +166,10 @@ CREATE TABLE public.exercises (
     sets integer DEFAULT 0,
     rest_between_sets character varying(50),
     rest_between_exercises character varying(50),
-    test_result character varying(10),
-    workout_value character varying(10),
+    test_result integer,
+    workout_value double precision,
     notes text,
-    percentage numeric(1,1)
+    percentage integer
 );
 
 
@@ -761,6 +779,13 @@ CREATE UNIQUE INDEX index_workout_names_on_name ON public.workout_names USING bt
 
 
 --
+-- Name: exercises exercises_before_update_row_tr; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER exercises_before_update_row_tr BEFORE UPDATE ON public.exercises FOR EACH ROW EXECUTE FUNCTION public.exercises_before_update_row_tr();
+
+
+--
 -- Name: exercises fk_rails_08c387acdd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -855,6 +880,9 @@ ALTER TABLE ONLY public.exercises
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250327191558'),
+('20250327155738'),
+('20250326022025'),
 ('20250320215710'),
 ('20250311000542'),
 ('20250301191724'),

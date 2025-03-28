@@ -6,7 +6,7 @@
     %h3 Week
     #weeks
       = f.simple_fields_for :weeks do |week|
-        .daily-stuff
+        .schedule-stuff
           = render 'week_fields', f: week
           = link_to_add_association 'Add an Week', f, :weeks
   .form-actions
