@@ -2,7 +2,6 @@ class Schedule < ApplicationRecord
   validates :title, presence: true, allow_nil: false
   has_many :weeks, dependent: :destroy
 
-
   accepts_nested_attributes_for :weeks, reject_if: :all_blank, allow_destroy: true
   belongs_to :user
 

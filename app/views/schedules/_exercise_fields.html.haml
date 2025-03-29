@@ -5,6 +5,6 @@
    = f.input :percentage, collection: (10..100).step(10).map{ |n| ["#{n}%", n] }, html: { class: 'choices-select'}, prompt: 'Choose an Status'
    = f.input :sets
    = f.association :exercise_status, collection: ExerciseStatus.order(:name).pluck(:name, :id), html: { class: 'choices-select'}, prompt: 'Choose an Status'
-   = f.input :rest_between_sets
-   = f.input :rest_between_exercises
+   = f.input :rest_between_sets_id, label: 'Rest Between sets', collection: RestTime.order(:name).pluck(:name, :id), prompt: 'Choose a Rest Time'
+   = f.input :rest_between_exercises_id, label: 'Rest Between Exercises', collection: RestTime.order(:name).pluck(:name, :id), prompt: 'Choose a Rest Time'
    = link_to_remove_association "remove exercise", f

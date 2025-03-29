@@ -3,7 +3,7 @@
   %thead
     %tr
       %th{:scope => "col"} Name
-      %th{:scope => "col"} Intensity
+      %th{:scope => "col"} Reps/time
       %th{:scope => "col"} Rest
       - if @day.week.number == 1
         %th Test Result
@@ -18,10 +18,8 @@
       %tr
         %td= exercise.workout_name.name.titleize
         %td= exercise.intensity
-        %td
-          - unless @day.week.number == 1
-            = turbo_frame_tag exercise do
-              = render partial: 'days/rest_time', locals: { exercise: exercise }
+        - unless @day.week.number == 1
+          %td= exercise.sets_rest_time.name
         - if @day.week.number == 1
           %td
             = turbo_frame_tag exercise do
@@ -29,24 +27,21 @@
         - else
           %td= exercise.workout_value
         - unless @day.week.number == 1
-          %td
-            = form_with model: exercise, id: dom_id(exercise) do |exercise_form|
-              = exercise_form.select :percentage, options_for_select([[50, "50"],[60, "60"],[70, "70"],[80, "80"],[90, "90"],[100, "100"]], exercise_form.object.percentage)
-              = exercise_form.submit 'Update', class: 'btn btn-primary'
+          %td= exercise.percentage
         %td= exercise.sets
         %td
           = form_with model: exercise, id: dom_id(exercise, :notes) do |exercise_form|
             = exercise_form.text_area :notes, id: "test_result_#{exercise.id}"
             = exercise_form.submit 'Update', class: 'btn btn-primary'
-      - if exercise.rest_between_exercises.present? && @day.exercises.order(:number).last != exercise
+      - if exercise.exercise_rest_time.present? && @day.exercises.order(:number).last != exercise
         %tr
           %td
           %td
           %td
-            = exercise.rest_between_exercises
+            = exercise.exercise_rest_time.name
           %td
           %td
-  #btn.float-right
+  .btn.float-right
 - if previous_day = find_previous_day(@day)
   = button_to previous_day&.day_name&.name, day_path(id: previous_day&.id), method: :get
 - if next_day = find_next_day(@day)

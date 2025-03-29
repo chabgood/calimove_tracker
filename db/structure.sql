@@ -19,9 +19,7 @@ CREATE FUNCTION public.exercises_before_update_row_tr() RETURNS trigger
     AS $$
 BEGIN
     NEW.workout_value = (SELECT (e1.test_result::FLOAT * NEW.percentage)/100 FROM exercises e1
-          join exercise_statuses es on es.id = e1.exercise_statuses_id
           WHERE e1.workout_name_id = NEW.workout_name_id
-          and es.name <> 'test'
           ORDER BY e1.id ASC LIMIT 1);
     RETURN NEW;
 END;
@@ -164,8 +162,8 @@ CREATE TABLE public.exercises (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     sets integer DEFAULT 0,
-    rest_between_sets character varying(50),
-    rest_between_exercises character varying(50),
+    rest_between_sets_id integer,
+    rest_between_exercises_id integer,
     test_result integer,
     workout_value double precision,
     notes text,
@@ -255,6 +253,37 @@ ALTER SEQUENCE public.phases_id_seq OWNED BY public.phases.id;
 
 
 --
+-- Name: rest_times; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rest_times (
+    id bigint NOT NULL,
+    name character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: rest_times_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rest_times_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rest_times_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rest_times_id_seq OWNED BY public.rest_times.id;
+
+
+--
 -- Name: schedules; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -337,7 +366,8 @@ CREATE TABLE public.users (
     email_address character varying NOT NULL,
     password_digest character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    admin boolean DEFAULT false
 );
 
 
@@ -498,6 +528,13 @@ ALTER TABLE ONLY public.phases ALTER COLUMN id SET DEFAULT nextval('public.phase
 
 
 --
+-- Name: rest_times id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rest_times ALTER COLUMN id SET DEFAULT nextval('public.rest_times_id_seq'::regclass);
+
+
+--
 -- Name: schedules id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -601,6 +638,14 @@ ALTER TABLE ONLY public.levels
 
 ALTER TABLE ONLY public.phases
     ADD CONSTRAINT phases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rest_times rest_times_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rest_times
+    ADD CONSTRAINT rest_times_pkey PRIMARY KEY (id);
 
 
 --
@@ -850,11 +895,27 @@ ALTER TABLE ONLY public.exercises
 
 
 --
+-- Name: exercises fk_rails_c35342a474; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercises
+    ADD CONSTRAINT fk_rails_c35342a474 FOREIGN KEY (rest_between_exercises_id) REFERENCES public.rest_times(id);
+
+
+--
 -- Name: weeks fk_rails_d845741310; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.weeks
     ADD CONSTRAINT fk_rails_d845741310 FOREIGN KEY (schedule_id) REFERENCES public.schedules(id);
+
+
+--
+-- Name: exercises fk_rails_e4f9931325; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercises
+    ADD CONSTRAINT fk_rails_e4f9931325 FOREIGN KEY (rest_between_sets_id) REFERENCES public.rest_times(id);
 
 
 --
@@ -880,6 +941,8 @@ ALTER TABLE ONLY public.exercises
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250329205554'),
+('20250328202805'),
 ('20250327191558'),
 ('20250327155738'),
 ('20250326022025'),

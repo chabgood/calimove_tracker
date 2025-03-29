@@ -6,6 +6,7 @@ class UserResource < Madmin::Resource
   attribute :updated_at, form: false
   attribute :password, index: false, show: false
   attribute :password_confirmation, index: false, show: false
+  attribute :admin
 
   # Associations
   attribute :sessions

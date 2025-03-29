@@ -8,6 +8,6 @@
       = f.simple_fields_for :weeks do |week|
         .schedule-stuff
           = render 'week_fields', f: week
-          = link_to_add_association 'Add an Week', f, :weeks
+          = link_to_add_association 'Add a Week', f, :weeks
   .form-actions
     = f.button :submit
