@@ -25,4 +25,11 @@ class Exercise < ApplicationRecord
       WHERE e1.workout_name_id = NEW.workout_name_id
       ORDER BY e1.id ASC LIMIT 1);"
   end
+
+  trigger.after(:insert) do
+    "Insert Into set_trackers (exercise_id, created_at, updated_at)
+			Select id, NOW(), NOW()
+			From exercises e Inner Join Lateral generate_series(1, e.sets) As t On true
+			where e.id = NEW.id;"
+  end
 end

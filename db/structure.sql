@@ -11,6 +11,23 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: exercises_after_insert_row_tr(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.exercises_after_insert_row_tr() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    Insert Into set_trackers (exercise_id, created_at, updated_at)
+          Select id, NOW(), NOW()
+          From exercises e Inner Join Lateral generate_series(1, e.sets) As t On true
+          where e.id = NEW.id;
+    RETURN NULL;
+END;
+$$;
+
+
+--
 -- Name: exercises_before_update_row_tr(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -878,6 +895,13 @@ CREATE UNIQUE INDEX index_workout_names_on_name ON public.workout_names USING bt
 
 
 --
+-- Name: exercises exercises_after_insert_row_tr; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER exercises_after_insert_row_tr AFTER INSERT ON public.exercises FOR EACH ROW EXECUTE FUNCTION public.exercises_after_insert_row_tr();
+
+
+--
 -- Name: exercises exercises_before_update_row_tr; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -1003,6 +1027,7 @@ ALTER TABLE ONLY public.exercises
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250401161416'),
 ('20250331215026'),
 ('20250329205554'),
 ('20250328202805'),
