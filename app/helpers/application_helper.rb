@@ -10,4 +10,10 @@ module ApplicationHelper
   def percentage_select
     (10..100).step(10).map { |n| [ "#{n}%", n ] }
   end
+
+  def render_flash
+    return if @_flash_rendered
+
+    render partial: "shared/flash"
+  end
 end

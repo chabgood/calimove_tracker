@@ -6,3 +6,6 @@ import { application } from "./application"
 
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import SetTrackerSubmitController from "./set_tracker_submit_controller"
+application.register("set-tracker-submit", SetTrackerSubmitController)

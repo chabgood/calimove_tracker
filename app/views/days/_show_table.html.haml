@@ -28,7 +28,12 @@
           %td= exercise.workout_value
         - unless @day.week.number == 1
           %td= exercise.percentage
-        %td= exercise.sets
+        %td
+          - exercise.set_trackers.order(:id).each_with_index do |tracker, index|
+            .form-check.form-check-inline
+              = form_with model: tracker, data: { controller: 'set-tracker-submit'} do |form|
+                = form.check_box :completed, data: { action: 'set-tracker-submit#submit'}, class: "form-check-input"
+                = label_tag "completed[]", index +1, class: "form-check-label"
         %td
           = form_with model: exercise, id: dom_id(exercise, :notes) do |exercise_form|
             = exercise_form.text_area :notes, id: "test_result_#{exercise.id}"

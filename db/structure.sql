@@ -358,6 +358,38 @@ ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
 
 
 --
+-- Name: set_trackers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.set_trackers (
+    id bigint NOT NULL,
+    exercise_id bigint NOT NULL,
+    completed boolean,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: set_trackers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.set_trackers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: set_trackers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.set_trackers_id_seq OWNED BY public.set_trackers.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -549,6 +581,13 @@ ALTER TABLE ONLY public.sessions ALTER COLUMN id SET DEFAULT nextval('public.ses
 
 
 --
+-- Name: set_trackers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.set_trackers ALTER COLUMN id SET DEFAULT nextval('public.set_trackers_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -670,6 +709,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: set_trackers set_trackers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.set_trackers
+    ADD CONSTRAINT set_trackers_pkey PRIMARY KEY (id);
 
 
 --
@@ -796,6 +843,13 @@ CREATE INDEX index_sessions_on_user_id ON public.sessions USING btree (user_id);
 
 
 --
+-- Name: index_set_trackers_on_exercise_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_set_trackers_on_exercise_id ON public.set_trackers USING btree (exercise_id);
+
+
+--
 -- Name: index_users_on_email_address; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -828,6 +882,14 @@ CREATE UNIQUE INDEX index_workout_names_on_name ON public.workout_names USING bt
 --
 
 CREATE TRIGGER exercises_before_update_row_tr BEFORE UPDATE ON public.exercises FOR EACH ROW EXECUTE FUNCTION public.exercises_before_update_row_tr();
+
+
+--
+-- Name: set_trackers fk_rails_05e8a805c7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.set_trackers
+    ADD CONSTRAINT fk_rails_05e8a805c7 FOREIGN KEY (exercise_id) REFERENCES public.exercises(id);
 
 
 --
@@ -941,6 +1003,7 @@ ALTER TABLE ONLY public.exercises
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250331215026'),
 ('20250329205554'),
 ('20250328202805'),
 ('20250327191558'),
