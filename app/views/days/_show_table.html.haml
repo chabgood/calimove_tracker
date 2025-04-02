@@ -2,6 +2,7 @@
 %table.table
   %thead
     %tr
+      %th
       %th{:scope => "col"} Name
       %th{:scope => "col"} Reps/time
       %th{:scope => "col"} Rest
@@ -16,6 +17,7 @@
   %tbody
     - @day.exercises.order(:number).each do |exercise|
       %tr
+        %td=exercise.number
         %td= exercise.workout_name.name.titleize
         %td= exercise.intensity
         - unless @day.week.number == 1
@@ -40,6 +42,7 @@
             = exercise_form.submit 'Update', class: 'btn btn-primary'
       - if exercise.exercise_rest_time.present? && @day.exercises.order(:number).last != exercise
         %tr
+          %td
           %td
           %td
           %td

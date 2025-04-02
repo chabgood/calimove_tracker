@@ -7,7 +7,7 @@
       .accordion-item
         %h2#headingOne.accordion-header
           %button.accordion-button{"aria-controls" => "collapseOne", "aria-expanded" => "true", "data-bs-target" => "#collapseOne", "data-bs-toggle" => "collapse", type: "button"}
-            Day - #{day.object.day_name.name}
+            Day - #{day&.object&.day_name&.name}
         #collapseOne.accordion-collapse.collapse.show{"aria-labelledby" => "headingOne", "data-bs-parent" => "#accordionExample"}
           .accordion-body
             = render 'day_fields', f: day
