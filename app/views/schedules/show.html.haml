@@ -9,4 +9,5 @@
   Weeks:
   - @schedule.weeks.each do |week|
     %div
-      = link_to("Week: #{week.number}", week_path(week))
+      = link_to("Week: #{week.number} - #{week.week_status.name}", week_path(week))
+      = ": #{week.days.size} days"

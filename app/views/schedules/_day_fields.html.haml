@@ -1,5 +1,5 @@
 .nested-fields
-  = f.association :day_name, collection: DayName.pluck(:name, :id), html: { class: 'choices-select'}, prompt: 'Choose an Day'
+  = f.association :day_name, collection: DayName.order(:number).pluck(:name, :id), html: { class: 'choices-select'}, :include_blank => "(select if none)"
   %h3 exercise:
   = f.simple_fields_for :exercises do |exercise|
     = render 'exercise_fields', f: exercise

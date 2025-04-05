@@ -76,7 +76,8 @@ CREATE TABLE public.day_names (
     id bigint NOT NULL,
     name character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    number integer
 );
 
 
@@ -184,7 +185,8 @@ CREATE TABLE public.exercises (
     test_result integer,
     workout_value double precision,
     notes text,
-    percentage integer
+    percentage integer,
+    grouped boolean DEFAULT false
 );
 
 
@@ -1027,6 +1029,8 @@ ALTER TABLE ONLY public.exercises
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250405161147'),
+('20250403004611'),
 ('20250401161416'),
 ('20250331215026'),
 ('20250329205554'),

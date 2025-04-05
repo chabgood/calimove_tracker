@@ -7,6 +7,8 @@ import "choices.js/public/assets/styles/choices.css";
 document.addEventListener("DOMContentLoaded", function() {
   const selectElements = document.querySelectorAll('select');
   selectElements.forEach(select => {
-    new Choices(select);
+    new Choices(select, {
+      shouldSort: false
+    });
   });
 });

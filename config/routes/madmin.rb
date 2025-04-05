@@ -1,5 +1,6 @@
 # Below are the routes for madmin
 namespace :madmin do
+  resources :rest_times
   resources :week_statuses
   resources :workout_names
   resources :schedules

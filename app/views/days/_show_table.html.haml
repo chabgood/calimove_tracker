@@ -15,13 +15,15 @@
       %th{:scope => "col"} Set(s)
       %th Notes
   %tbody
-    - @day.exercises.order(:number).each do |exercise|
+    - if @day.exercises.pluck(:grouped).include?(true)
+      %h3= "Circuit Exercise"
+    - @day.exercises.order(:number,:grouped).each do |exercise|
       %tr
         %td=exercise.number
         %td= exercise.workout_name.name.titleize
         %td= exercise.intensity
         - unless @day.week.number == 1
-          %td= exercise.sets_rest_time.name
+          %td= exercise&.sets_rest_time&.name
         - if @day.week.number == 1
           %td
             = turbo_frame_tag exercise do
