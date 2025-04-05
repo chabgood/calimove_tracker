@@ -3,15 +3,10 @@
   = f.association :week_status, collection: WeekStatus.pluck(:name, :id), prompt: 'Choose an Status'
   %h3 Days
   = f.simple_fields_for :days do |day|
-    .accordion[day&.object]
-      .accordion-item
-        %h2.accordion-header[day&.object, :header]
-          %button.accordion-button{"aria-controls" => "day_#{day&.object&.id}", "aria-expanded" => "false", "data-bs-target" => "header_day_#{day&.object&.id}", "data-bs-toggle" => "collapse", type: "button"}
-            Day - #{day&.object&.day_name&.name}
-        %div[day&.object]
-          .accordion-collapse.collapse.hide{"aria-labelledby" => "header_day_#{day&.object&.id}", "data-bs-parent" => "#day_#{day&.object&.id}"}
-          .accordion-body
-            = render 'day_fields', f: day
+    %a.btn.btn-primary{"aria-controls" => "collapseExample", "aria-expanded" => "false", "data-bs-toggle" => "collapse", href: "#\day_#{day.object&.id}", role: "button"}
+      Day - #{day&.object&.day_name&.name}
+      .collapse[day.object]
+        = render 'day_fields', f: day
   .links
     = link_to_add_association 'Add a Day', f, :days
   = link_to_remove_association "remove week", f
