@@ -5,8 +5,8 @@
   = f.simple_fields_for :days do |day|
     %a.btn.btn-primary{"aria-controls" => "collapseExample", "aria-expanded" => "false", "data-bs-toggle" => "collapse", href: "#\day_#{day.object&.id}", role: "button"}
       Day - #{day&.object&.day_name&.name}
-      .collapse[day.object]
-        = render 'day_fields', f: day
+    .collapse[day.object]
+      = render 'day_fields', f: day
   .links
     = link_to_add_association 'Add a Day', f, :days
   = link_to_remove_association "remove week", f

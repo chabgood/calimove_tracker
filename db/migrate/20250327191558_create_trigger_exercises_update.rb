@@ -6,8 +6,7 @@ class CreateTriggerExercisesUpdate < ActiveRecord::Migration[8.0]
   def up
     create_trigger("exercises_before_update_row_tr", generated: true, compatibility: 1).
         on("exercises").
-        before(:insert).
-        before(:update) do
+        before(:insert, :update) do
       <<-SQL_ACTIONS
 NEW.workout_value = (SELECT (e1.test_result::FLOAT * NEW.percentage)/100 FROM exercises e1
       WHERE e1.workout_name_id = NEW.workout_name_id

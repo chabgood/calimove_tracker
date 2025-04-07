@@ -35,7 +35,7 @@ module ApplicationHelper
   end
 
   def day_name
-    Rails.cache.fetch("workout_name", expires_in: 1.week) do
+    Rails.cache.fetch("day_name", expires_in: 1.week) do
       DayName.order(:number).pluck(:name, :id)
     end
   end
