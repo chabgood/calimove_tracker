@@ -35,10 +35,11 @@ CREATE FUNCTION public.exercises_before_update_row_tr() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-    NEW.workout_value = (SELECT (e1.test_result::FLOAT * NEW.percentage)/100 FROM exercises e1
-          WHERE e1.workout_name_id = NEW.workout_name_id
-          ORDER BY e1.id ASC LIMIT 1);
-    RETURN NEW;
+      NEW.workout_value = (SELECT (e1.test_result::FLOAT * NEW.percentage)/100 FROM exercises e1
+      WHERE e1.workout_name_id = NEW.workout_name_id
+      ORDER BY e1.id ASC LIMIT 1);
+
+	RETURN NEW;
 END;
 $$;
 
@@ -907,7 +908,7 @@ CREATE TRIGGER exercises_after_insert_row_tr AFTER INSERT ON public.exercises FO
 -- Name: exercises exercises_before_update_row_tr; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER exercises_before_update_row_tr BEFORE UPDATE ON public.exercises FOR EACH ROW EXECUTE FUNCTION public.exercises_before_update_row_tr();
+CREATE TRIGGER exercises_before_update_row_tr BEFORE INSERT OR UPDATE ON public.exercises FOR EACH ROW EXECUTE FUNCTION public.exercises_before_update_row_tr();
 
 
 --
