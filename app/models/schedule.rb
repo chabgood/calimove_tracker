@@ -17,7 +17,8 @@ class Schedule < ApplicationRecord
         exercise = day.exercises.build(phase_id: find_phase_id(row), level_id: find_level_id(row),
           workout: row[5].value, workout_name_id: find_workout_name_id(row), number: row[7], intensity: row[8].value)
         if row[5].value.starts_with?("T")
-          exercise.rest_between_exercises = "10-15 minutes"
+          rt = RestTime.find_or_create_by(name: "10-15 minutes")
+          exercise.rest_between_exercises_id = rt.id
           exercise.exercise_statuses_id = ExerciseStatus.find_by(name: "test")&.id
         else
           exercise.exercise_statuses_id = ExerciseStatus.find_by(name: "work")&.id
