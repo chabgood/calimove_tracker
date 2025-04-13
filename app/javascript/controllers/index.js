@@ -7,3 +7,6 @@ import { application } from "./application"
 
 import SetTrackerSubmitController from "./set_tracker_submit_controller"
 application.register("set-tracker-submit", SetTrackerSubmitController)
+
+import UpdateNotesController from "./update_notes_controller"
+application.register("update-notes-submit", UpdateNotesController)

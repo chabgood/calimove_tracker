@@ -1,0 +1,3 @@
+= form_with model: exercise, url: update_notes_path(id: exercise.id), data: { controller: 'update_notes-submit'} do |exercise_form|
+  = exercise_form.text_area :notes, data: { action: 'update_notes-submit#submit'}, id: "exercise_#{exercise.id}"
+  = exercise_form.submit 'Update', class: 'btn btn-primary'

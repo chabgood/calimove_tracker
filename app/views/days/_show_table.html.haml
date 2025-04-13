@@ -34,11 +34,10 @@
           %td= exercise.percentage
         %td
           = turbo_frame_tag dom_id(exercise, :set_trackers) do
-            = render partial: 'set_tracker_form', locals: { exercise: exercise}
+            = render partial: 'days/set_tracker_form', locals: { exercise: exercise}
         %td
-          = form_with model: exercise, id: dom_id(exercise, :notes) do |exercise_form|
-            = exercise_form.text_area :notes, id: "test_result_#{exercise.id}"
-            = exercise_form.submit 'Update', class: 'btn btn-primary'
+          = turbo_frame_tag dom_id(exercise, :notes) do
+            = render partial: 'exercises/notes_form', locals: { exercise: exercise}
       - if exercise.exercise_rest_time.present? && @day.exercises.order(:number).last != exercise
         %tr
           %td
