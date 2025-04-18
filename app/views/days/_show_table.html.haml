@@ -52,5 +52,5 @@
   = button_to previous_day&.day_name&.name, day_path(id: previous_day&.id), method: :get
 - if next_day = find_next_day(@day)
   = button_to next_day&.day_name&.name, day_path(id: next_day&.id), method: :get
-- else
-  = button_to 'Next Week', week_path(id: @day.week&.id + 1), method: :get
+- if next_week = find_next_week(@day)
+  = button_to 'Next Week', week_path(id: next_week&.id), method: :get
