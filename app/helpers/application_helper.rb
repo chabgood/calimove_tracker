@@ -1,10 +1,10 @@
 module ApplicationHelper
   def find_next_day(day)
-    Day.find_by(id: day.id + 1)
+    Day.includes(:day_name).find_by(id: day.id + 1)
   end
 
   def find_previous_day(day)
-    Day.find_by(id: day.id - 1)
+    Day.includes(:day_name).find_by(id: day.id - 1)
   end
 
   def find_next_week(day)
