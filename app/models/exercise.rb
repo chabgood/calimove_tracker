@@ -1,7 +1,7 @@
 class Exercise < ApplicationRecord
   belongs_to :day
   belongs_to :workout_name
-
+  
   belongs_to :exercise_status, foreign_key: "exercise_statuses_id", optional: true
 
   belongs_to :level, optional: true
@@ -12,6 +12,8 @@ class Exercise < ApplicationRecord
   belongs_to :exercise_rest_time, class_name: "RestTime", foreign_key: "rest_between_exercises_id", optional: true
 
   has_many :set_trackers
+
+  after_update :create_set_trackers, if: :sets_changed?
 
   default_scope { order(:number) }
 
@@ -31,5 +33,11 @@ class Exercise < ApplicationRecord
 			Select id, NOW(), NOW()
 			From exercises e Inner Join Lateral generate_series(1, e.sets) As t On true
 			where e.id = NEW.id;"
+  end
+
+  def create_set_trackers
+    sets.each do |set|
+      SetTracker.find_or_create_by(exercise_id: id)
+    end
   end
 end

@@ -1,16 +1,18 @@
 class SchedulesController < ApplicationController
-  before_action :set_schedule, only: %i[ show edit update destroy]
+  before_action :set_schedule, only: %i[ edit ]
   def index
-    @schedules = current_user.schedules.includes(:weeks)
+    @schedules = current_user.schedules
   end
 
   def show
+    @schedule = Schedule.find_by(id: params[:id])
   end
 
   def edit
   end
 
   def update
+    @schedule = Schedule.find_by(id: params[:id])
     if @schedule.update!(schedule_params)
       redirect_to @schedule
     else
@@ -29,14 +31,14 @@ class SchedulesController < ApplicationController
   def new
     @schedule = Schedule.new
     @schedule.weeks.build
-    @schedule.weeks.map(&:days).map(&:build).map(&:exercises).map(&:build)
+    #@schedule.weeks.map(&:days).map(&:build).map(&:exercises).map(&:build)
     respond_to do |format|
       format.html
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace(
           "schedule",
           partial: "form",
-          locals: { article: @schedule }
+          locals: { schedule: @schedule }
         )
       end
     end
@@ -60,6 +62,7 @@ class SchedulesController < ApplicationController
   end
 
   def destroy
+    @schedule = Schedule.find(params[:id])
     if @schedule.destroy
       redirect_to schedules_path
     end

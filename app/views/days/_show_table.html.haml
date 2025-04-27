@@ -24,6 +24,8 @@
         %td= exercise.intensity
         - unless @day.week.number == 1
           %td= exercise&.sets_rest_time&.name
+        -else
+          %td
         - if @day.week.number == 1
           %td
             = turbo_frame_tag exercise do
