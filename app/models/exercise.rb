@@ -24,8 +24,13 @@ class Exercise < ApplicationRecord
 
   trigger.before(:insert, :update) do
     "NEW.workout_value = (SELECT (e1.test_result::FLOAT * NEW.percentage)/100 FROM exercises e1
+ 			JOIN days d on d.id = NEW.day_id
+ 			JOIN weeks w on w.id = d.week_id
+ 			JOIN schedules s on s.id = w.schedule_id
       WHERE e1.workout_name_id = NEW.workout_name_id
-      ORDER BY e1.id ASC LIMIT 1);"
+      AND s.user_id = NEW.user_id
+      ORDER BY e1.id ASC LIMIT 1)
+      where NEW.test_value is NULL;"
   end
 
   trigger.after(:insert) do
@@ -33,6 +38,14 @@ class Exercise < ApplicationRecord
 			Select id, NOW(), NOW()
 			From exercises e Inner Join Lateral generate_series(1, e.sets) As t On true
 			where e.id = NEW.id;"
+  end
+
+  trigger.before(:insert, :update) do
+    "NEW.user_id = (SELECT s.user_id from exercises e
+        JOIN days d on d.id = NEW.day_id
+ 			  JOIN weeks w on w.id = d.week_id
+ 			  JOIN schedules s on s.id = w.schedule_id
+        where e.id = NEW.id);"
   end
 
   def create_set_trackers

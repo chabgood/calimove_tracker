@@ -19,27 +19,28 @@ CREATE FUNCTION public.exercises_after_insert_row_tr() RETURNS trigger
     AS $$
 BEGIN
     Insert Into set_trackers (exercise_id, created_at, updated_at)
-          Select id, NOW(), NOW()
-          From exercises e Inner Join Lateral generate_series(1, e.sets) As t On true
-          where e.id = NEW.id;
+                Select id, NOW(), NOW()
+                From exercises e Inner Join Lateral generate_series(1, e.sets) As t On true
+                where e.id = NEW.id;
     RETURN NULL;
 END;
 $$;
 
 
 --
--- Name: exercises_before_update_row_tr(); Type: FUNCTION; Schema: public; Owner: -
+-- Name: exercises_before_insert_update_row_tr(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.exercises_before_update_row_tr() RETURNS trigger
+CREATE FUNCTION public.exercises_before_insert_update_row_tr() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-      NEW.workout_value = (SELECT (e1.test_result::FLOAT * NEW.percentage)/100 FROM exercises e1
-      WHERE e1.workout_name_id = NEW.workout_name_id
-      ORDER BY e1.id ASC LIMIT 1);
-
-	RETURN NEW;
+    NEW.user_id = (SELECT s.user_id from exercises e
+            JOIN days d on d.id = NEW.day_id
+                   JOIN weeks w on w.id = d.week_id
+                   JOIN schedules s on s.id = w.schedule_id
+            where e.id = NEW.id);
+    RETURN NEW;
 END;
 $$;
 
@@ -187,7 +188,8 @@ CREATE TABLE public.exercises (
     workout_value double precision,
     notes text,
     percentage integer,
-    grouped boolean DEFAULT false
+    grouped boolean DEFAULT false,
+    user_id bigint
 );
 
 
@@ -821,6 +823,13 @@ CREATE INDEX index_exercises_on_phase_id ON public.exercises USING btree (phase_
 
 
 --
+-- Name: index_exercises_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exercises_on_user_id ON public.exercises USING btree (user_id);
+
+
+--
 -- Name: index_exercises_on_workout_name_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -905,10 +914,10 @@ CREATE TRIGGER exercises_after_insert_row_tr AFTER INSERT ON public.exercises FO
 
 
 --
--- Name: exercises exercises_before_update_row_tr; Type: TRIGGER; Schema: public; Owner: -
+-- Name: exercises exercises_before_insert_update_row_tr; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER exercises_before_update_row_tr BEFORE INSERT OR UPDATE ON public.exercises FOR EACH ROW EXECUTE FUNCTION public.exercises_before_update_row_tr();
+CREATE TRIGGER exercises_before_insert_update_row_tr BEFORE INSERT OR UPDATE ON public.exercises FOR EACH ROW EXECUTE FUNCTION public.exercises_before_insert_update_row_tr();
 
 
 --
@@ -1024,12 +1033,22 @@ ALTER TABLE ONLY public.exercises
 
 
 --
+-- Name: exercises fk_rails_f4f6893528; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercises
+    ADD CONSTRAINT fk_rails_f4f6893528 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250503013911'),
+('20250503001853'),
 ('20250405161147'),
 ('20250403004611'),
 ('20250401161416'),
