@@ -77,7 +77,7 @@ class SchedulesController < ApplicationController
   def schedule_params
     params.require(:schedule).permit(
       :title,
-      weeks_attributes: [ :id, :number, :_destroy, :week_status,
+      weeks_attributes: [ :id, :number, :_destroy, :week_statuses_id,
       days_attributes: [ :_destroy, :id, :day_name_id,
       exercises_attributes: [ :_destroy, :id, :grouped, :workout_name_id, :percentage, :number, :exercise_statuses_id, :intensity, :sets, :rest_between_sets_id, :rest_between_exercises_id ] ] ]
     )

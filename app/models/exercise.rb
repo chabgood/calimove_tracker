@@ -22,15 +22,15 @@ class Exercise < ApplicationRecord
     @exercise_workout_name ||= self.workout_name.name
   end
 
-  trigger.before(:insert, :update) do
+  trigger.before(:insert, :update).name("set_workout_value") do
     "NEW.workout_value = (SELECT (e1.test_result::FLOAT * NEW.percentage)/100 FROM exercises e1
  			JOIN days d on d.id = NEW.day_id
  			JOIN weeks w on w.id = d.week_id
  			JOIN schedules s on s.id = w.schedule_id
       WHERE e1.workout_name_id = NEW.workout_name_id
       AND s.user_id = NEW.user_id
-      ORDER BY e1.id ASC LIMIT 1)
-      where NEW.test_value is NULL;"
+      AND e1.test_result is NOT NULL
+      ORDER BY e1.id DESC LIMIT 1);"
   end
 
   trigger.after(:insert) do
@@ -40,7 +40,7 @@ class Exercise < ApplicationRecord
 			where e.id = NEW.id;"
   end
 
-  trigger.before(:insert, :update) do
+  trigger.before(:insert, :update).name("set_user_id") do
     "NEW.user_id = (SELECT s.user_id from exercises e
         JOIN days d on d.id = NEW.day_id
  			  JOIN weeks w on w.id = d.week_id

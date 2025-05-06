@@ -28,10 +28,10 @@ $$;
 
 
 --
--- Name: exercises_before_insert_update_row_tr(); Type: FUNCTION; Schema: public; Owner: -
+-- Name: set_user_id(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.exercises_before_insert_update_row_tr() RETURNS trigger
+CREATE FUNCTION public.set_user_id() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -40,6 +40,27 @@ BEGIN
                    JOIN weeks w on w.id = d.week_id
                    JOIN schedules s on s.id = w.schedule_id
             where e.id = NEW.id);
+    RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: set_workout_value(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.set_workout_value() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    NEW.workout_value = (SELECT (e1.test_result::FLOAT * NEW.percentage)/100 FROM exercises e1
+                 JOIN days d on d.id = NEW.day_id
+                 JOIN weeks w on w.id = d.week_id
+                 JOIN schedules s on s.id = w.schedule_id
+          WHERE e1.workout_name_id = NEW.workout_name_id
+          AND s.user_id = NEW.user_id
+          AND e1.test_result is NOT NULL
+          ORDER BY e1.id DESC LIMIT 1);
     RETURN NEW;
 END;
 $$;
@@ -914,10 +935,17 @@ CREATE TRIGGER exercises_after_insert_row_tr AFTER INSERT ON public.exercises FO
 
 
 --
--- Name: exercises exercises_before_insert_update_row_tr; Type: TRIGGER; Schema: public; Owner: -
+-- Name: exercises set_user_id; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER exercises_before_insert_update_row_tr BEFORE INSERT OR UPDATE ON public.exercises FOR EACH ROW EXECUTE FUNCTION public.exercises_before_insert_update_row_tr();
+CREATE TRIGGER set_user_id BEFORE INSERT OR UPDATE ON public.exercises FOR EACH ROW EXECUTE FUNCTION public.set_user_id();
+
+
+--
+-- Name: exercises set_workout_value; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER set_workout_value BEFORE INSERT OR UPDATE ON public.exercises FOR EACH ROW EXECUTE FUNCTION public.set_workout_value();
 
 
 --
@@ -1047,6 +1075,10 @@ ALTER TABLE ONLY public.exercises
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250505192536'),
+('20250505182216'),
+('20250505182031'),
+('20250503164018'),
 ('20250503013911'),
 ('20250503001853'),
 ('20250405161147'),

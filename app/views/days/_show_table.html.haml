@@ -31,7 +31,7 @@
             = turbo_frame_tag exercise do
               = render partial: 'days/update_test_result', locals: { exercise: exercise }
         - else
-          %td= exercise.workout_value
+          %td= exercise.workout_value.to_i
         - unless @day.week.number == 1
           %td= exercise.percentage
         %td

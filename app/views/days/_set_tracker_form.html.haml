@@ -1,4 +1,4 @@
-- exercise.set_trackers.order(:id).each_with_index do |tracker, index|
+- exercise.set_trackers.select(:completed, :id).order(:id).each_with_index do |tracker, index|
   .form-check.form-check-inline
     = form_with model: tracker, data: { controller: 'set-tracker-submit'} do |form|
       = form.check_box :completed, data: { action: 'set-tracker-submit#submit'}, id: "tracker_#{tracker.id}", class: "form-check-input"
