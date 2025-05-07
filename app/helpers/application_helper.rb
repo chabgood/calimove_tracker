@@ -18,6 +18,7 @@ module ApplicationHelper
   end
 
   def render_flash
+    binding.pry
     return if @_flash_rendered
     render partial: "shared/flash"
   end
