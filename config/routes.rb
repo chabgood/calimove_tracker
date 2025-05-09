@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   resources :day_names
   resources :set_trackers
 
-  patch 'update_notes', to: 'schedules#update_notes'
+  patch 'update_notes', to: 'exercises#update_notes'
   post "create_schedule_upload", to: "schedules#create_upload"
   get "new_schedule_upload", to: "schedules#new_upload"
 

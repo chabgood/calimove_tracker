@@ -15,6 +15,21 @@ class ExercisesController < ApplicationController
     end
   end
 
+  def update_notes
+    respond_to do |format|
+      format.turbo_stream do
+        @exercise = Exercise.find_by(id: params[:id])
+        if @exercise.update(notes: params[:exercise][:notes])
+          flash.now[:success] = "Note saved"
+          format.turbo_stream
+        else
+          render nothing: true
+        end
+      end
+    end
+
+  end
+
   private
   def permitted_params
     params.expect(exercise: [ :rest, :test_result, :copy_rest_time, :notes, :percentage ])

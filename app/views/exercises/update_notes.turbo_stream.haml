@@ -1,0 +1,2 @@
+= turbo_stream.replace "notes_exercises_#{@exercise.id}", partial: "exercises/notes_form", locals: { exercise: @exercise }
+= turbo_stream.prepend "flash", partial: "shared/flash"

@@ -6,7 +6,7 @@
     %meta{:content => "width=device-width,initial-scale=1", :name => "viewport"}/
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "yes", :name => "mobile-web-app-capable"}/
-    %script{:defer => "defer", :src => "/_debugbar/assets/script"}
+    //%script{:defer => "defer", :src => "/_debugbar/assets/script"}
     %script{:crossorigin => "anonymous", :integrity => "sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=", :src => "https://code.jquery.com/jquery-3.7.1.min.js"}
       :cdata
     = javascript_include_tag :cocoon
@@ -23,7 +23,8 @@
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
   %body
     = render partial: "shared/navbar"
-    = render partial: "shared/flash"
+    %div#flash
+      = render 'shared/flash'
     .container.mt-5
       = yield
     = debugbar_body if defined? Debugbar

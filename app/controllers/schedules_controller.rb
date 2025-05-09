@@ -20,18 +20,9 @@ class SchedulesController < ApplicationController
     end
   end
 
-  def update_notes
-    exercise = Exercise.find_by(id: params[:id])
-    exercise.update(notes: params[:exercise][:notes])
-    render turbo_stream: turbo_stream.replace("notes_exercises_#{exercise.id}", 
-                                                partial: "exercises/notes_form",
-                                                locals: { exercise: exercise})
-  end
-
   def new
     @schedule = Schedule.new
     @schedule.weeks.build
-    #@schedule.weeks.map(&:days).map(&:build).map(&:exercises).map(&:build)
     respond_to do |format|
       format.html
       format.turbo_stream do
