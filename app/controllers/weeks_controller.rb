@@ -6,4 +6,11 @@ class WeeksController < ApplicationController
   def index
     @weeks = Schedule.includes(:weeks).find(params[:schedule_id]).weeks
   end
+
+  def duplicate
+    week = Week.find_by(id: params[:id])
+    new_week = week.deep_clone(include: {days: :exercises})
+    new_week.save!
+    redirect_to schedule_path(new_week.schedule)
+  end
 end

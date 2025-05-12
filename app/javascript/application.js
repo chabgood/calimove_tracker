@@ -13,8 +13,4 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
-$(function() {
-  setTimeout(function(){
-    $('.alert').slideUp(500);
-  }, 1000);
-});
+$('.alert').delay(5000).fadeOut('slow');

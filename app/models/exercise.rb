@@ -13,7 +13,7 @@ class Exercise < ApplicationRecord
 
   has_many :set_trackers
 
-  after_update :create_set_trackers, if: :sets_changed?
+  after_save :create_set_trackers
 
   default_scope { order(:number) }
 
@@ -49,8 +49,10 @@ class Exercise < ApplicationRecord
   end
 
   def create_set_trackers
-    sets.each do |set|
-      SetTracker.find_or_create_by(exercise_id: id)
+    if self.set_trackers.size < self.sets
+      (self.set_trackers.size - self.sets).times do
+        SetTracker.find_or_create_by(exercise_id: id)
+      end
     end
   end
 end
