@@ -11,4 +11,5 @@
     %div
       = link_to("Week: #{week.number} - #{week.week_status.name}", week_path(week))
       = ": #{week.days.size} days"
-      = button_to 'Duplicate', duplicate_week_path(id: week)
+      = link_to 'Duplicate', duplicate_week_path(id: week), data: { turbo_method: :post }
+      \#{button_to 'Destroy Week', week, method: :delete}

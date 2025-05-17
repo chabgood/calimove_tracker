@@ -84,8 +84,6 @@ gem "madmin", "~> 2.0"
 
 gem "hot_flash", "~> 1.1"
 
-gem "dockerfile-rails", ">= 1.7", :group => :development
-
 gem "pry-remote", "~> 0.1.8"
 
-gem "deep_cloneable", "~> 3.2"
+gem "rails_deep_copy", "~> 0.0.7"

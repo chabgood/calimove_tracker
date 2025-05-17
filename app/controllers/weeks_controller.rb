@@ -7,10 +7,16 @@ class WeeksController < ApplicationController
     @weeks = Schedule.includes(:weeks).find(params[:schedule_id]).weeks
   end
 
+  def destroy
+    @week = Week.find_by(id: params[:id])
+    if @week.destroy
+      redirect_to schedule_path(@week.schedule)
+    end
+  end
+
   def duplicate
     week = Week.find_by(id: params[:id])
-    new_week = week.deep_clone(include: {days: :exercises}, except: [:set_trackers])
-    new_week.save!
-    redirect_to schedule_path(new_week.schedule)
+    RailsDeepCopy::Duplicate.create(week)
+    redirect_to schedule_path(week.schedule)
   end
 end

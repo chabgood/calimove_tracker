@@ -11,9 +11,9 @@ class Exercise < ApplicationRecord
   belongs_to :sets_rest_time, class_name: "RestTime", foreign_key: "rest_between_sets_id", optional: true
   belongs_to :exercise_rest_time, class_name: "RestTime", foreign_key: "rest_between_exercises_id", optional: true
 
-  has_many :set_trackers
-
-  after_save :create_set_trackers
+  has_many :set_trackers, dependent: :destroy
+  DUPLICABLE_DEFAULTS = {notes: ''}
+  # after_save :create_set_trackers
 
   default_scope { order(:number) }
 

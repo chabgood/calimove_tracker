@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   resources :schedules, only: [ :new, :create, :show, :index, :edit, :update ]
-  resources :weeks, only: [ :show, :index ]
+  resources :weeks, only: [ :show, :index, :destroy ]
   resources :days, only: [ :show, :index ]
   resources :exercises, only: [ :update ]
   resources :day_names
