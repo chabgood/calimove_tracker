@@ -1,4 +1,4 @@
 = turbo_stream.replace("set_trackers_exercise_#{@tracker.id}", 
                                     partial: "days/set_tracker_form",
                                     locals: { exercise: @tracker.exercise })
-= turbo_stream.prepend "flash", partial: "shared/flash"
+= turbo_stream.replace "flash", partial: "shared/flash"
