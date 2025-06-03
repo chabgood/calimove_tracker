@@ -1,5 +1,7 @@
 - exercise.set_trackers.select(:completed, :id).order(:id).each_with_index do |tracker, index|
   .form-check.form-check-inline
-    = form_with model: tracker, data: { controller: 'set-tracker-submit'} do |form|
+    - new_index = index + 1
+    = form_with model: tracker, data: { turbo: false },  data: { controller: 'set-tracker-submit'} do |form|
       = form.check_box :completed, data: { action: 'set-tracker-submit#submit'}, id: "tracker_#{tracker.id}", class: "form-check-input"
-      = label_tag "completed[]", index +1, class: "form-check-label"
+      = label_tag "completed[]", new_index, class: "form-check-label"
+      = hidden_field_tag :set, new_index

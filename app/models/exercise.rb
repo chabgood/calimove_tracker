@@ -13,7 +13,7 @@ class Exercise < ApplicationRecord
 
   has_many :set_trackers, dependent: :destroy
   DUPLICABLE_DEFAULTS = {notes: ''}
-  # after_save :create_set_trackers
+  after_create :create_set_trackers
 
   default_scope { order(:number) }
 
@@ -49,8 +49,9 @@ class Exercise < ApplicationRecord
   end
 
   def create_set_trackers
-    if self.set_trackers.size < self.sets
-      (self.set_trackers.size - self.sets).times do
+    tracker_count = self.set_trackers.count
+    if tracker_count < self.sets
+      (self.sets - tracker_count).times do
         SetTracker.find_or_create_by(exercise_id: id)
       end
     end

@@ -39,9 +39,9 @@ module ApplicationHelper
   end
 
   def workout_name
-    Rails.cache.fetch("{cache_key_with_version}/workout_name", expires_in: 1.week) do
+    #Rails.cache.fetch("{cache_key_with_version}/workout_name", expires_in: 1.week) do
       WorkoutName.order(:name).pluck(:name, :id)
-    end
+    #end
   end
 
   def day_name
