@@ -13,7 +13,8 @@ class Exercise < ApplicationRecord
 
   has_many :set_trackers, dependent: :destroy
   DUPLICABLE_DEFAULTS = {notes: ''}
-  after_create :create_set_trackers
+  before_save :set_user_id
+  after_save :create_set_trackers
 
   default_scope { order(:number) }
 
@@ -23,20 +24,21 @@ class Exercise < ApplicationRecord
   end
 
   trigger.before(:insert, :update).name("set_workout_value") do
-    "NEW.workout_value = (SELECT (e1.test_result::FLOAT * NEW.percentage)/100 FROM exercises e1
- 			JOIN days d on d.id = NEW.day_id
- 			JOIN weeks w on w.id = d.week_id
- 			JOIN schedules s on s.id = w.schedule_id
-      WHERE e1.workout_name_id = NEW.workout_name_id
-      AND s.user_id = NEW.user_id
-      AND e1.test_result is NOT NULL
-      ORDER BY e1.id DESC LIMIT 1);"
+    "NEW.workout_value = (SELECT (e1.test_result::FLOAT * 80)/100 FROM exercises e1
+          WHERE e1.workout_name_id = NEW.workout_name_id
+          AND e1.test_result is NOT NULL
+          AND e1.user_id = (select s.user_id from exercises e2
+						JOIN days d on d.id = NEW.day_id
+ 						JOIN weeks w on w.id = d.week_id
+ 						JOIN schedules s on s.id = w.schedule_id
+ 						where e2.id = NEw.id)
+          ORDER BY e1.id DESC LIMIT 1);"
   end
 
   trigger.after(:insert) do
     "Insert Into set_trackers (exercise_id, created_at, updated_at)
 			Select id, NOW(), NOW()
-			From exercises e Inner Join Lateral generate_series(1, e.sets) As t On true
+			From exercises e Inner Join Lateral generate_series(1, NEW.sets) As t On true
 			where e.id = NEW.id;"
   end
 
@@ -52,8 +54,12 @@ class Exercise < ApplicationRecord
     tracker_count = self.set_trackers.count
     if tracker_count < self.sets
       (self.sets - tracker_count).times do
-        SetTracker.find_or_create_by(exercise_id: id)
+        SetTracker.find_or_create_by(exercise_id: self.id)
       end
     end
+  end
+
+  def set_user_id
+    self.user_id = self.day.week.schedule.user_id
   end
 end

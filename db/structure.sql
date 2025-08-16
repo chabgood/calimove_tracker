@@ -20,7 +20,7 @@ CREATE FUNCTION public.exercises_after_insert_row_tr() RETURNS trigger
 BEGIN
     Insert Into set_trackers (exercise_id, created_at, updated_at)
                 Select id, NOW(), NOW()
-                From exercises e Inner Join Lateral generate_series(1, e.sets) As t On true
+                From exercises e Inner Join Lateral generate_series(1, NEW.sets) As t On true
                 where e.id = NEW.id;
     RETURN NULL;
 END;
@@ -53,14 +53,15 @@ CREATE FUNCTION public.set_workout_value() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-    NEW.workout_value = (SELECT (e1.test_result::FLOAT * NEW.percentage)/100 FROM exercises e1
-                 JOIN days d on d.id = NEW.day_id
-                 JOIN weeks w on w.id = d.week_id
-                 JOIN schedules s on s.id = w.schedule_id
-          WHERE e1.workout_name_id = NEW.workout_name_id
-          AND s.user_id = NEW.user_id
-          AND e1.test_result is NOT NULL
-          ORDER BY e1.id DESC LIMIT 1);
+    NEW.workout_value = (SELECT (e1.test_result::FLOAT * 80)/100 FROM exercises e1
+              WHERE e1.workout_name_id = NEW.workout_name_id
+              AND e1.test_result is NOT NULL
+              AND e1.user_id = (select s.user_id from exercises e2
+                            JOIN days d on d.id = NEW.day_id
+                             JOIN weeks w on w.id = d.week_id
+                             JOIN schedules s on s.id = w.schedule_id
+                             where e2.id = NEw.id)
+              ORDER BY e1.id DESC LIMIT 1);
     RETURN NEW;
 END;
 $$;
@@ -1075,6 +1076,9 @@ ALTER TABLE ONLY public.exercises
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250619021504'),
+('20250619012156'),
+('20250609140325'),
 ('20250505192536'),
 ('20250505182216'),
 ('20250505182031'),
