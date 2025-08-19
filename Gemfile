@@ -80,7 +80,7 @@ group :test do
 end
 # gem "sassc-rails"
 
-gem "madmin", "~> 2.0"
+gem "madmin", "~> 2.1"
 
 gem "hot_flash", "~> 1.1"
 
