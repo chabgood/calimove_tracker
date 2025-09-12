@@ -1,6 +1,8 @@
 class Exercise < ApplicationRecord
   belongs_to :day
   belongs_to :workout_name
+
+  self.primary_key = [:id]
   
   belongs_to :exercise_status, foreign_key: "exercise_statuses_id", optional: true
 
